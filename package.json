@@ -76,7 +76,7 @@
     "coverage": "gulp coverage",
     "deploy": "gulp deploy",
     "jsdoc": "gulp jsdoc",
-    "lint": "gulp lint",
+    "lint": "eslint .",
     "release": "gulp release",
     "test": "gulp test",
     "version": "gulp version",
