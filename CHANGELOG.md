@@ -1,5 +1,3 @@
-<a name="0.1.2"></a>
-
 ## [0.1.2](https://github.com/takuyaa/kuromoji.js/compare/0.1.1...0.1.2) (2018-03-20)
 
 ### Bug Fixes
@@ -9,8 +7,6 @@
 ### Bump deps
 
 - update dependencies and devDependencies in package.json
-
-<a name="0.1.1"></a>
 
 ## [0.1.1](https://github.com/takuyaa/kuromoji.js/compare/0.1.0...0.1.1) (2016-08-07)
 
@@ -22,11 +18,7 @@
 
 - browserified `kuromoji.js` does not work in browser ([#13](https://github.com/takuyaa/kuromoji.js/pull/13))
 
-<a name="0.1.0"></a>
-
 ## [0.1.0](https://github.com/takuyaa/kuromoji.js/compare/0.0.5...0.1.0) (2016-08-06)
-
-### Breaking Changes
 
 - change binary format of `cc.dat.gz` (connection costs dictionary) ([761eaf2](https://github.com/takuyaa/kuromoji.js/commit/761eaf299ff5db4887974cbbdc74eaf42fe39cc7), [c64cc22](https://github.com/takuyaa/kuromoji.js/commit/c64cc22c6100edaf95665f9b208837893608a287))
 
@@ -48,16 +40,12 @@
 - remove jsdoc directory from git repo ([817c23e](https://github.com/takuyaa/kuromoji.js/commit/817c23e6f57160c48655356762a5e6c059d54633))
 - define `deploy` gulp task to publish [jsdoc](https://takuyaa.github.io/kuromoji.js/jsdoc/) and [demo](http://takuyaa.github.io/kuromoji.js/demo/tokenize.html) as GitHub Pages ([2d638aa](https://github.com/takuyaa/kuromoji.js/commit/2d638aa57d4ec150c0f03656e05fb327e40d0ef9))
 
-<a name="0.0.5"></a>
-
 ## [0.0.5](https://github.com/takuyaa/kuromoji.js/compare/0.0.4...0.0.5) (2015-11-19)
 
 ### Bug Fixes
 
 - add error handling when DictionaryLoader try to load non-exist dictionaries ([#7](https://github.com/takuyaa/kuromoji.js/pull/7))
 - work with Atom editor ([#8](https://github.com/takuyaa/kuromoji.js/pull/8))
-
-<a name="0.0.4"></a>
 
 ## [0.0.4](https://github.com/takuyaa/kuromoji.js/compare/0.0.3...0.0.4) (2015-09-07)
 
@@ -69,16 +57,12 @@
 
 - use built-in zlib module instead of zlib.js on node.js ([#6](https://github.com/takuyaa/kuromoji.js/pull/6))
 
-<a name="0.0.3"></a>
-
 ## [0.0.3](https://github.com/takuyaa/kuromoji.js/compare/0.0.2...0.0.3) (2015-09-06)
 
 ### Miscellaneous
 
 - introduce Travis CI, Coveralls.io and Code Climate
 - update README.md
-
-<a name="0.0.2"></a>
 
 ## [0.0.2](https://github.com/takuyaa/kuromoji.js/compare/0.0.1...0.0.2) (2014-12-04)
 
