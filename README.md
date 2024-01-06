@@ -17,13 +17,14 @@ You can see how kuromoji.js works in [demo site](https://takuyaa.github.io/kurom
 Directory tree is as follows:
 
 ```directorytree
-build/
-   kuromoji.js -- JavaScript file for browser (Browserified)
-demo/         -- Demo
-dict/         -- Dictionaries for tokenizer (gzipped)
-example/      -- Examples to use in Node.js
-src/          -- JavaScript source
-test/         -- Unit test
+.
+├── build
+│     └── kuromoji.js: JavaScript file for browser (Browserified)
+├── demo: Demo
+├── dict: Dictionaries for tokenizer (gzipped)
+├── example: Examples to use in Node.js
+├── src: JavaScript source
+└── test: Unit test
 ```
 
 ## Usage
