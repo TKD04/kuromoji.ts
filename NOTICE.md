@@ -1,4 +1,6 @@
-# Library dependencies
+# NOTICE
+
+## Library dependencies
 
 This software includes a binary and/or source version of data from
 
@@ -12,9 +14,9 @@ or
 
 <http://jaist.dl.sourceforge.net/project/mecab/mecab-ipadic/2.7.0-20070801/mecab-ipadic-2.7.0-20070801.tar.gz>
 
-# Copyright and license
+## Copyright and license
 
-## mecab-ipadic-2.7.0-20070801
+### mecab-ipadic-2.7.0-20070801
 
 Copyright 2000, 2001, 2002, 2003 Nara Institute of Science
 and Technology. All Rights Reserved.
