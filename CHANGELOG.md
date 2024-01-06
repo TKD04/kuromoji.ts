@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD024 -->
+
 # CHANGELOG
 
 ## [0.1.2](https://github.com/takuyaa/kuromoji.js/compare/0.1.1...0.1.2) (2018-03-20)
