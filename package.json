@@ -38,6 +38,7 @@
     "mocha-lcov-reporter": "^1.2.0",
     "npm-check-updates": "^16.14.12",
     "run-sequence": "^2.2.1",
+    "typescript": "^5.3.3",
     "vinyl-source-stream": "^2.0.0"
   },
   "homepage": "https://github.com/takuyaa/kuromoji.js",
