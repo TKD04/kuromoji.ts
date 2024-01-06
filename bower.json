@@ -1,9 +1,7 @@
 {
   "name": "kuromoji",
   "version": "0.1.2",
-  "authors": [
-    "Takuya Asano <takuya.a@gmail.com>"
-  ],
+  "authors": ["Takuya Asano <takuya.a@gmail.com>"],
   "description": "JavaScript implementation of Japanese morphological analyzer",
   "main": [
     "build/kuromoji.js",

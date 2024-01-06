@@ -5,9 +5,7 @@
   "opts": {
     "destination": "./publish/jsdoc/"
   },
-  "plugins": [
-    "plugins/markdown"
-  ],
+  "plugins": ["plugins/markdown"],
   "templates": {
     "cleverLinks": false,
     "monospaceLinks": false,
