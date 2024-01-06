@@ -42,7 +42,7 @@ npm install kuromoji
 Load this library as follows:
 
 ```js
-var kuromoji = require("kuromoji");
+const kuromoji = require("kuromoji");
 ```
 
 You can prepare tokenizer like this:
@@ -50,9 +50,9 @@ You can prepare tokenizer like this:
 ```js
 kuromoji
   .builder({ dicPath: "path/to/dictionary/dir/" })
-  .build(function (err, tokenizer) {
+  .build((err, tokenizer) => {
     // tokenizer is ready
-    var path = tokenizer.tokenize("すもももももももものうち");
+    const path = tokenizer.tokenize("すもももももももものうち");
     console.log(path);
   });
 ```
@@ -72,7 +72,7 @@ Or you can use the kuromoji.js file and dictionary files from the GitHub reposit
 In your HTML:
 
 ```html
-<script src="url/to/kuromoji.js"></script>
+<script src="url/to/kuromoji.js" defer></script>
 ```
 
 In your JavaScript:
@@ -80,9 +80,9 @@ In your JavaScript:
 ```js
 kuromoji
   .builder({ dicPath: "/url/to/dictionary/dir/" })
-  .build(function (err, tokenizer) {
+  .build((err, tokenizer) => {
     // tokenizer is ready
-    var path = tokenizer.tokenize("すもももももももものうち");
+    const path = tokenizer.tokenize("すもももももももものうち");
     console.log(path);
   });
 ```
