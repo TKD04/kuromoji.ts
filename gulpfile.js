@@ -1,10 +1,10 @@
-"use strict";
+
 
 const fs = require("fs");
 const gulp = require("gulp");
 const del = require("del");
 const sequence = require("run-sequence");
-const merge = require("event-stream").merge;
+const {merge} = require("event-stream");
 const jshint = require("gulp-jshint");
 const browserify = require("browserify");
 const source = require("vinyl-source-stream");
@@ -19,27 +19,21 @@ const bump = require("gulp-bump");
 const argv = require("minimist")(process.argv.slice(2));
 const git = require("gulp-git");
 
-gulp.task("clean", (done) => {
-  return del([".publish/", "coverage/", "build/", "publish/"], done);
-});
+gulp.task("clean", (done) => del([".publish/", "coverage/", "build/", "publish/"], done));
 
-gulp.task("build", ["clean"], () => {
-  return browserify({
+gulp.task("build", ["clean"], () => browserify({
     entries: ["src/kuromoji.js"],
     standalone: "kuromoji", // window.kuromoji
   })
     .bundle()
     .pipe(source("kuromoji.js"))
-    .pipe(gulp.dest("build/"));
-});
+    .pipe(gulp.dest("build/")));
 
 gulp.task("watch", () => {
   gulp.watch(["src/**/*.js", "test/**/*.js"], ["lint", "build", "jsdoc"]);
 });
 
-gulp.task("clean-dict", (done) => {
-  return del(["dict/"], done);
-});
+gulp.task("clean-dict", (done) => del(["dict/"], done));
 
 gulp.task("create-dat-files", (done) => {
   const IPADic = require("mecab-ipadic-seed");
@@ -51,10 +45,10 @@ gulp.task("create-dat-files", (done) => {
 
   // To node.js Buffer
   function toBuffer(typed) {
-    var ab = typed.buffer;
-    var buffer = new Buffer(ab.byteLength);
-    var view = new Uint8Array(ab);
-    for (var i = 0; i < buffer.length; ++i) {
+    const ab = typed.buffer;
+    const buffer = new Buffer(ab.byteLength);
+    const view = new Uint8Array(ab);
+    for (let i = 0; i < buffer.length; ++i) {
       buffer[i] = view[i];
     }
     return buffer;
@@ -156,23 +150,17 @@ gulp.task("create-dat-files", (done) => {
     });
 });
 
-gulp.task("compress-dict", () => {
-  return gulp.src("dict/*.dat").pipe(gzip()).pipe(gulp.dest("dict/"));
-});
+gulp.task("compress-dict", () => gulp.src("dict/*.dat").pipe(gzip()).pipe(gulp.dest("dict/")));
 
-gulp.task("clean-dat-files", (done) => {
-  return del(["dict/*.dat"], done);
-});
+gulp.task("clean-dat-files", (done) => del(["dict/*.dat"], done));
 
 gulp.task("build-dict", ["build", "clean-dict"], () => {
   sequence("create-dat-files", "compress-dict", "clean-dat-files");
 });
 
-gulp.task("test", ["build"], () => {
-  return gulp
+gulp.task("test", ["build"], () => gulp
     .src("test/**/*.js", { read: false })
-    .pipe(mocha({ reporter: "list" }));
-});
+    .pipe(mocha({ reporter: "list" })));
 
 gulp.task("coverage", ["test"], (done) => {
   gulp
@@ -188,37 +176,27 @@ gulp.task("coverage", ["test"], (done) => {
     });
 });
 
-gulp.task("lint", () => {
-  return gulp
+gulp.task("lint", () => gulp
     .src(["src/**/*.js"])
     .pipe(jshint())
-    .pipe(jshint.reporter("default"));
-});
+    .pipe(jshint.reporter("default")));
 
-gulp.task("clean-jsdoc", (done) => {
-  return del(["publish/jsdoc/"], done);
-});
+gulp.task("clean-jsdoc", (done) => del(["publish/jsdoc/"], done));
 
 gulp.task("jsdoc", ["clean-jsdoc"], (cb) => {
-  var config = require("./jsdoc.json");
+  const config = require("./jsdoc.json");
   gulp.src(["src/**/*.js"], { read: false }).pipe(jsdoc(config, cb));
 });
 
-gulp.task("clean-demo", (done) => {
-  return del(["publish/demo/"], done);
-});
+gulp.task("clean-demo", (done) => del(["publish/demo/"], done));
 
-gulp.task("copy-demo", ["clean-demo", "build"], () => {
-  return merge(
+gulp.task("copy-demo", ["clean-demo", "build"], () => merge(
     gulp.src("demo/**/*").pipe(gulp.dest("publish/demo/")),
     gulp.src("build/**/*").pipe(gulp.dest("publish/demo/kuromoji/build/")),
     gulp.src("dict/**/*").pipe(gulp.dest("publish/demo/kuromoji/dict/")),
-  );
-});
+  ));
 
-gulp.task("build-demo", ["copy-demo"], () => {
-  return bower({ cwd: "publish/demo/" });
-});
+gulp.task("build-demo", ["copy-demo"], () => bower({ cwd: "publish/demo/" }));
 
 gulp.task("webserver", ["build-demo", "jsdoc"], () => {
   gulp.src("publish/").pipe(
@@ -230,38 +208,36 @@ gulp.task("webserver", ["build-demo", "jsdoc"], () => {
   );
 });
 
-gulp.task("deploy", ["build-demo", "jsdoc"], () => {
-  return gulp.src("publish/**/*").pipe(ghPages());
-});
+gulp.task("deploy", ["build-demo", "jsdoc"], () => gulp.src("publish/**/*").pipe(ghPages()));
 
-gulp.task("version", function () {
+gulp.task("version", () => {
   let type = "patch";
-  if (argv["minor"]) {
+  if (argv.minor) {
     type = "minor";
   }
-  if (argv["major"]) {
+  if (argv.major) {
     type = "major";
   }
-  if (argv["prerelease"]) {
+  if (argv.prerelease) {
     type = "prerelease";
   }
   return gulp
     .src(["./bower.json", "./package.json"])
-    .pipe(bump({ type: type }))
+    .pipe(bump({ type }))
     .pipe(gulp.dest("./"));
 });
 
-gulp.task("release-commit", function () {
-  var version = JSON.parse(fs.readFileSync("./package.json", "utf8")).version;
+gulp.task("release-commit", () => {
+  const {version} = JSON.parse(fs.readFileSync("./package.json", "utf8"));
   return gulp
     .src(".")
     .pipe(git.add())
     .pipe(git.commit(`chore: release ${version}`));
 });
 
-gulp.task("release-tag", function (callback) {
-  var version = JSON.parse(fs.readFileSync("./package.json", "utf8")).version;
-  git.tag(version, `${version} release`, function (error) {
+gulp.task("release-tag", (callback) => {
+  const {version} = JSON.parse(fs.readFileSync("./package.json", "utf8"));
+  git.tag(version, `${version} release`, (error) => {
     if (error) {
       return callback(error);
     }

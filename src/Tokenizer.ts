@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
-"use strict";
 
-var ViterbiBuilder = require("./viterbi/ViterbiBuilder");
-var ViterbiSearcher = require("./viterbi/ViterbiSearcher");
-var IpadicFormatter = require("./util/IpadicFormatter");
 
-var PUNCTUATION = /、|。/;
+const ViterbiBuilder = require("./viterbi/ViterbiBuilder");
+const ViterbiSearcher = require("./viterbi/ViterbiSearcher");
+const IpadicFormatter = require("./util/IpadicFormatter");
+
+const PUNCTUATION = /、|。/;
 
 /**
  * Tokenizer
@@ -42,13 +42,13 @@ function Tokenizer(dic) {
  * @returns {Array.<string>} Sentences end with punctuation
  */
 Tokenizer.splitByPunctuation = function (input) {
-  var sentences = [];
-  var tail = input;
+  const sentences = [];
+  let tail = input;
   while (true) {
     if (tail === "") {
       break;
     }
-    var index = tail.search(PUNCTUATION);
+    const index = tail.search(PUNCTUATION);
     if (index < 0) {
       sentences.push(tail);
       break;
@@ -65,10 +65,10 @@ Tokenizer.splitByPunctuation = function (input) {
  * @returns {Array} Tokens
  */
 Tokenizer.prototype.tokenize = function (text) {
-  var sentences = Tokenizer.splitByPunctuation(text);
-  var tokens = [];
-  for (var i = 0; i < sentences.length; i++) {
-    var sentence = sentences[i];
+  const sentences = Tokenizer.splitByPunctuation(text);
+  const tokens = [];
+  for (let i = 0; i < sentences.length; i++) {
+    const sentence = sentences[i];
     this.tokenizeForSentence(sentence, tokens);
   }
   return tokens;
@@ -78,17 +78,17 @@ Tokenizer.prototype.tokenizeForSentence = function (sentence, tokens) {
   if (tokens == null) {
     tokens = [];
   }
-  var lattice = this.getLattice(sentence);
-  var best_path = this.viterbi_searcher.search(lattice);
-  var last_pos = 0;
+  const lattice = this.getLattice(sentence);
+  const best_path = this.viterbi_searcher.search(lattice);
+  let last_pos = 0;
   if (tokens.length > 0) {
     last_pos = tokens[tokens.length - 1].word_position;
   }
 
-  for (var j = 0; j < best_path.length; j++) {
-    var node = best_path[j];
+  for (let j = 0; j < best_path.length; j++) {
+    const node = best_path[j];
 
-    var token, features, features_line;
+    var token; var features; var features_line;
     if (node.type === "KNOWN") {
       features_line = this.token_info_dictionary.getFeatures(node.name);
       if (features_line == null) {

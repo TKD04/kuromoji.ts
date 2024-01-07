@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-"use strict";
 
-var Tokenizer = require("./Tokenizer");
-var DictionaryLoader = require("./loader/NodeDictionaryLoader");
+
+const Tokenizer = require("./Tokenizer");
+const DictionaryLoader = require("./loader/NodeDictionaryLoader");
 
 /**
  * TokenizerBuilder create Tokenizer instance.
@@ -39,8 +39,8 @@ function TokenizerBuilder(option) {
  * @param {TokenizerBuilder~onLoad} callback Callback function
  */
 TokenizerBuilder.prototype.build = function (callback) {
-  var loader = new DictionaryLoader(this.dic_path);
-  loader.load(function (err, dic) {
+  const loader = new DictionaryLoader(this.dic_path);
+  loader.load((err, dic) => {
     callback(err, new Tokenizer(dic));
   });
 };

@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-"use strict";
 
-var doublearray = require("doublearray");
-var TokenInfoDictionary = require("./TokenInfoDictionary");
-var ConnectionCosts = require("./ConnectionCosts");
-var UnknownDictionary = require("./UnknownDictionary");
+
+const doublearray = require("doublearray");
+const TokenInfoDictionary = require("./TokenInfoDictionary");
+const ConnectionCosts = require("./ConnectionCosts");
+const UnknownDictionary = require("./UnknownDictionary");
 
 /**
  * Dictionaries container for Tokenizer

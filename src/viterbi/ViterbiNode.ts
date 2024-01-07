@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-"use strict";
+
 
 /**
  * ViterbiNode is a node of ViterbiLattice

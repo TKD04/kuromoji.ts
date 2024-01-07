@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-"use strict";
 
-var fs = require("fs");
-var node_zlib = require("zlib");
-var DictionaryLoader = require("./DictionaryLoader");
+
+const fs = require("fs");
+const node_zlib = require("zlib");
+const DictionaryLoader = require("./DictionaryLoader");
 
 /**
  * NodeDictionaryLoader inherits DictionaryLoader
@@ -38,15 +38,15 @@ NodeDictionaryLoader.prototype = Object.create(DictionaryLoader.prototype);
  * @param {NodeDictionaryLoader~onLoad} callback Callback function
  */
 NodeDictionaryLoader.prototype.loadArrayBuffer = function (file, callback) {
-  fs.readFile(file, function (err, buffer) {
+  fs.readFile(file, (err, buffer) => {
     if (err) {
       return callback(err);
     }
-    node_zlib.gunzip(buffer, function (err2, decompressed) {
+    node_zlib.gunzip(buffer, (err2, decompressed) => {
       if (err2) {
         return callback(err2);
       }
-      var typed_array = new Uint8Array(decompressed);
+      const typed_array = new Uint8Array(decompressed);
       callback(null, typed_array.buffer);
     });
   });

@@ -15,14 +15,14 @@
  * limitations under the License.
  */
 
-"use strict";
 
-var doublearray = require("doublearray");
-var DynamicDictionaries = require("../DynamicDictionaries");
-var TokenInfoDictionary = require("../TokenInfoDictionary");
-var ConnectionCostsBuilder = require("./ConnectionCostsBuilder");
-var CharacterDefinitionBuilder = require("./CharacterDefinitionBuilder");
-var UnknownDictionary = require("../UnknownDictionary");
+
+const doublearray = require("doublearray");
+const DynamicDictionaries = require("../DynamicDictionaries");
+const TokenInfoDictionary = require("../TokenInfoDictionary");
+const ConnectionCostsBuilder = require("./ConnectionCostsBuilder");
+const CharacterDefinitionBuilder = require("./CharacterDefinitionBuilder");
+const UnknownDictionary = require("../UnknownDictionary");
 
 /**
  * Build dictionaries (token info, connection costs)
@@ -46,7 +46,7 @@ function DictionaryBuilder() {
 }
 
 DictionaryBuilder.prototype.addTokenInfoDictionary = function (line) {
-  var new_entry = line.split(",");
+  const new_entry = line.split(",");
   this.tid_entries.push(new_entry);
   return this;
 };
@@ -75,8 +75,8 @@ DictionaryBuilder.prototype.putUnkDefLine = function (line) {
 };
 
 DictionaryBuilder.prototype.build = function () {
-  var dictionaries = this.buildTokenInfoDictionary();
-  var unknown_dictionary = this.buildUnknownDictionary();
+  const dictionaries = this.buildTokenInfoDictionary();
+  const unknown_dictionary = this.buildUnknownDictionary();
 
   return new DynamicDictionaries(
     dictionaries.trie,
@@ -92,18 +92,18 @@ DictionaryBuilder.prototype.build = function () {
  * @returns {{trie: *, token_info_dictionary: *}}
  */
 DictionaryBuilder.prototype.buildTokenInfoDictionary = function () {
-  var token_info_dictionary = new TokenInfoDictionary();
+  const token_info_dictionary = new TokenInfoDictionary();
 
   // using as hashmap, string -> string (word_id -> surface_form) to build dictionary
-  var dictionary_entries = token_info_dictionary.buildDictionary(
+  const dictionary_entries = token_info_dictionary.buildDictionary(
     this.tid_entries,
   );
 
-  var trie = this.buildDoubleArray();
+  const trie = this.buildDoubleArray();
 
-  for (var token_info_id in dictionary_entries) {
-    var surface_form = dictionary_entries[token_info_id];
-    var trie_id = trie.lookup(surface_form);
+  for (const token_info_id in dictionary_entries) {
+    const surface_form = dictionary_entries[token_info_id];
+    const trie_id = trie.lookup(surface_form);
 
     // Assertion
     // if (trie_id < 0) {
@@ -114,24 +114,24 @@ DictionaryBuilder.prototype.buildTokenInfoDictionary = function () {
   }
 
   return {
-    trie: trie,
-    token_info_dictionary: token_info_dictionary,
+    trie,
+    token_info_dictionary,
   };
 };
 
 DictionaryBuilder.prototype.buildUnknownDictionary = function () {
-  var unk_dictionary = new UnknownDictionary();
+  const unk_dictionary = new UnknownDictionary();
 
   // using as hashmap, string -> string (word_id -> surface_form) to build dictionary
-  var dictionary_entries = unk_dictionary.buildDictionary(this.unk_entries);
+  const dictionary_entries = unk_dictionary.buildDictionary(this.unk_entries);
 
-  var char_def = this.cd_builder.build(); // Create CharacterDefinition
+  const char_def = this.cd_builder.build(); // Create CharacterDefinition
 
   unk_dictionary.characterDefinition(char_def);
 
-  for (var token_info_id in dictionary_entries) {
-    var class_name = dictionary_entries[token_info_id];
-    var class_id = char_def.invoke_definition_map.lookup(class_name);
+  for (const token_info_id in dictionary_entries) {
+    const class_name = dictionary_entries[token_info_id];
+    const class_id = char_def.invoke_definition_map.lookup(class_name);
 
     // Assertion
     // if (trie_id < 0) {
@@ -150,13 +150,13 @@ DictionaryBuilder.prototype.buildUnknownDictionary = function () {
  * @returns {DoubleArray} Double-Array trie
  */
 DictionaryBuilder.prototype.buildDoubleArray = function () {
-  var trie_id = 0;
-  var words = this.tid_entries.map(function (entry) {
-    var surface_form = entry[0];
+  let trie_id = 0;
+  const words = this.tid_entries.map((entry) => {
+    const surface_form = entry[0];
     return { k: surface_form, v: trie_id++ };
   });
 
-  var builder = doublearray.builder(1024 * 1024);
+  const builder = doublearray.builder(1024 * 1024);
   return builder.build(words);
 };
 

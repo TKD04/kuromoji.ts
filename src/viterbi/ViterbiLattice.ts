@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-"use strict";
 
-var ViterbiNode = require("./ViterbiNode");
+
+const ViterbiNode = require("./ViterbiNode");
 
 /**
  * ViterbiLattice is a lattice in Viterbi algorithm
@@ -34,12 +34,12 @@ function ViterbiLattice() {
  * @param {ViterbiNode} node
  */
 ViterbiLattice.prototype.append = function (node) {
-  var last_pos = node.start_pos + node.length - 1;
+  const last_pos = node.start_pos + node.length - 1;
   if (this.eos_pos < last_pos) {
     this.eos_pos = last_pos;
   }
 
-  var prev_nodes = this.nodes_end_at[last_pos];
+  let prev_nodes = this.nodes_end_at[last_pos];
   if (prev_nodes == null) {
     prev_nodes = [];
   }
@@ -52,7 +52,7 @@ ViterbiLattice.prototype.append = function (node) {
  * Set ends with EOS (End of Statement)
  */
 ViterbiLattice.prototype.appendEos = function () {
-  var last_index = this.nodes_end_at.length;
+  const last_index = this.nodes_end_at.length;
   this.eos_pos++;
   this.nodes_end_at[last_index] = [
     new ViterbiNode(-1, 0, this.eos_pos, 0, "EOS", 0, 0, ""),

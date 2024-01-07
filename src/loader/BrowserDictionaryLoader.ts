@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-"use strict";
 
-var zlib = require("zlibjs/bin/gunzip.min.js");
-var DictionaryLoader = require("./DictionaryLoader");
+
+const zlib = require("zlibjs/bin/gunzip.min.js");
+const DictionaryLoader = require("./DictionaryLoader");
 
 /**
  * BrowserDictionaryLoader inherits DictionaryLoader, using jQuery XHR for download
@@ -37,7 +37,7 @@ BrowserDictionaryLoader.prototype = Object.create(DictionaryLoader.prototype);
  * @param {BrowserDictionaryLoader~onLoad} callback Callback function
  */
 BrowserDictionaryLoader.prototype.loadArrayBuffer = function (url, callback) {
-  var xhr = new XMLHttpRequest();
+  const xhr = new XMLHttpRequest();
   xhr.open("GET", url, true);
   xhr.responseType = "arraybuffer";
   xhr.onload = function () {
@@ -45,10 +45,10 @@ BrowserDictionaryLoader.prototype.loadArrayBuffer = function (url, callback) {
       callback(xhr.statusText, null);
       return;
     }
-    var arraybuffer = this.response;
+    const arraybuffer = this.response;
 
-    var gz = new zlib.Zlib.Gunzip(new Uint8Array(arraybuffer));
-    var typed_array = gz.decompress();
+    const gz = new zlib.Zlib.Gunzip(new Uint8Array(arraybuffer));
+    const typed_array = gz.decompress();
     callback(null, typed_array.buffer);
   };
   xhr.onerror = function (err) {

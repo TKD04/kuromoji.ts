@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-"use strict";
+
 
 /**
  * Connection costs matrix from cc.dat file.
@@ -35,7 +35,7 @@ function ConnectionCosts(forward_dimension, backward_dimension) {
 }
 
 ConnectionCosts.prototype.put = function (forward_id, backward_id, cost) {
-  var index = forward_id * this.backward_dimension + backward_id + 2;
+  const index = forward_id * this.backward_dimension + backward_id + 2;
   if (this.buffer.length < index + 1) {
     throw "ConnectionCosts buffer overflow";
   }
@@ -43,7 +43,7 @@ ConnectionCosts.prototype.put = function (forward_id, backward_id, cost) {
 };
 
 ConnectionCosts.prototype.get = function (forward_id, backward_id) {
-  var index = forward_id * this.backward_dimension + backward_id + 2;
+  const index = forward_id * this.backward_dimension + backward_id + 2;
   if (this.buffer.length < index + 1) {
     throw "ConnectionCosts buffer overflow";
   }

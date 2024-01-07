@@ -15,36 +15,34 @@
  * limitations under the License.
  */
 
-var expect = require("chai").expect;
-var DictionaryLoader = require("../../src/loader/NodeDictionaryLoader");
-var ViterbiBuilder = require("../../src/viterbi/ViterbiBuilder");
+const {expect} = require("chai");
+const DictionaryLoader = require("../loader/NodeDictionaryLoader");
+const ViterbiBuilder = require("./ViterbiBuilder");
 
-var DIC_DIR = "dict/";
+const DIC_DIR = "dict/";
 
-describe("ViterbiBuilder", function () {
-  var viterbi_builder = null; // target object
+describe("viterbiBuilder", () => {
+  let viterbi_builder = null; // target object
 
   before(function (done) {
     this.timeout(5 * 60 * 1000); // 5 min
-    var loader = new DictionaryLoader(DIC_DIR);
-    loader.load(function (err, dic) {
+    const loader = new DictionaryLoader(DIC_DIR);
+    loader.load((err, dic) => {
       viterbi_builder = new ViterbiBuilder(dic);
       done();
     });
   });
 
-  it("Unknown word", function () {
+  it("unknown word", () => {
     // lattice to have "ト", "トト", "トトロ"
-    var lattice = viterbi_builder.build("トトロ");
-    for (var i = 1; i < lattice.eos_pos; i++) {
-      var nodes = lattice.nodes_end_at[i];
+    const lattice = viterbi_builder.build("トトロ");
+    for (let i = 1; i < lattice.eos_pos; i++) {
+      const nodes = lattice.nodes_end_at[i];
       if (nodes == null) {
         continue;
       }
       expect(
-        nodes.map(function (node) {
-          return node.surface_form;
-        }),
+        nodes.map((node) => node.surface_form),
       ).to.include("トトロ".slice(0, i));
     }
   });

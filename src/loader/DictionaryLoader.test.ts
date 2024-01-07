@@ -15,25 +15,25 @@
  * limitations under the License.
  */
 
-var expect = require("chai").expect;
-var DictionaryLoader = require("../../src/loader/NodeDictionaryLoader");
+const {expect} = require("chai");
+const DictionaryLoader = require("./NodeDictionaryLoader");
 
-var DIC_DIR = "dict/";
+const DIC_DIR = "dict/";
 
-describe("DictionaryLoader", function () {
-  var dictionaries = null; // target object
+describe("dictionaryLoader", () => {
+  let dictionaries = null; // target object
 
   before(function (done) {
     this.timeout(5 * 60 * 1000); // 5 min
 
-    var loader = new DictionaryLoader(DIC_DIR);
-    loader.load(function (err, dic) {
+    const loader = new DictionaryLoader(DIC_DIR);
+    loader.load((err, dic) => {
       dictionaries = dic;
       done();
     });
   });
 
-  it("Unknown dictionaries are loaded properly", function () {
+  it("unknown dictionaries are loaded properly", () => {
     expect(dictionaries.unknown_dictionary.lookup(" ")).to.deep.eql({
       class_id: 1,
       class_name: "SPACE",
@@ -42,27 +42,27 @@ describe("DictionaryLoader", function () {
       max_length: 0,
     });
   });
-  it("TokenInfoDictionary is loaded properly", function () {
+  it("tokenInfoDictionary is loaded properly", () => {
     expect(
       dictionaries.token_info_dictionary.getFeatures("0"),
     ).to.have.length.above(1);
   });
 });
 
-describe("DictionaryLoader about loading", function () {
+describe("dictionaryLoader about loading", () => {
   it("could load directory path without suffix /", function (done) {
     this.timeout(5 * 60 * 1000); // 5 min
 
-    var loader = new DictionaryLoader("dict"); // not have suffix /
-    loader.load(function (err, dic) {
+    const loader = new DictionaryLoader("dict"); // not have suffix /
+    loader.load((err, dic) => {
       expect(err).to.be.null;
       expect(dic).to.not.be.undefined;
       done();
     });
   });
-  it("couldn't load dictionary, then call with error", function (done) {
-    var loader = new DictionaryLoader("non-exist/dictionaries");
-    loader.load(function (err, dic) {
+  it("couldn't load dictionary, then call with error", (done) => {
+    const loader = new DictionaryLoader("non-exist/dictionaries");
+    loader.load((err, dic) => {
       expect(err).to.be.an.instanceof(Error);
       done();
     });

@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-"use strict";
 
-var ConnectionCosts = require("../ConnectionCosts");
+
+const ConnectionCosts = require("../ConnectionCosts");
 
 /**
  * Builder class for constructing ConnectionCosts object
@@ -30,9 +30,9 @@ function ConnectionCostsBuilder() {
 
 ConnectionCostsBuilder.prototype.putLine = function (line) {
   if (this.lines === 0) {
-    var dimensions = line.split(" ");
-    var forward_dimension = dimensions[0];
-    var backward_dimension = dimensions[1];
+    const dimensions = line.split(" ");
+    const forward_dimension = dimensions[0];
+    const backward_dimension = dimensions[1];
 
     if (forward_dimension < 0 || backward_dimension < 0) {
       throw "Parse error of matrix.def";
@@ -46,15 +46,15 @@ ConnectionCostsBuilder.prototype.putLine = function (line) {
     return this;
   }
 
-  var costs = line.split(" ");
+  const costs = line.split(" ");
 
   if (costs.length !== 3) {
     return this;
   }
 
-  var forward_id = parseInt(costs[0]);
-  var backward_id = parseInt(costs[1]);
-  var cost = parseInt(costs[2]);
+  const forward_id = parseInt(costs[0]);
+  const backward_id = parseInt(costs[1]);
+  const cost = parseInt(costs[2]);
 
   if (
     forward_id < 0 ||

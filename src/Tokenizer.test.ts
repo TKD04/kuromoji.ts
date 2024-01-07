@@ -15,30 +15,30 @@
  * limitations under the License.
  */
 
-var expect = require("chai").expect;
-var kuromoji = require("../src/kuromoji.js"); // Not to be browserifiy-ed
-var Tokenizer = require("../src/Tokenizer");
+const {expect} = require("chai");
+const kuromoji = require("../src/kuromoji.js"); // Not to be browserifiy-ed
+const Tokenizer = require("./Tokenizer");
 
-var DIC_DIR = "dict/";
+const DIC_DIR = "dict/";
 
-describe("Tokenizer static method test", function () {
-  it("splitByPunctuation", function () {
+describe("tokenizer static method test", () => {
+  it("splitByPunctuation", () => {
     expect(
       Tokenizer.splitByPunctuation("すもももももももものうち"),
     ).to.deep.eql(["すもももももももものうち"]);
   });
-  it("splitByPunctuation", function () {
+  it("splitByPunctuation", () => {
     expect(Tokenizer.splitByPunctuation("、")).to.deep.eql(["、"]);
   });
-  it("splitByPunctuation", function () {
+  it("splitByPunctuation", () => {
     expect(Tokenizer.splitByPunctuation("。")).to.deep.eql(["。"]);
   });
-  it("splitByPunctuation", function () {
+  it("splitByPunctuation", () => {
     expect(
       Tokenizer.splitByPunctuation("すもも、も、もも。もも、も、もも。"),
     ).to.deep.eql(["すもも、", "も、", "もも。", "もも、", "も、", "もも。"]);
   });
-  it("splitByPunctuation", function () {
+  it("splitByPunctuation", () => {
     expect(Tokenizer.splitByPunctuation("、𠮷野屋。漢字。")).to.deep.eql([
       "、",
       "𠮷野屋。",
@@ -47,21 +47,21 @@ describe("Tokenizer static method test", function () {
   });
 });
 
-describe("Tokenizer for IPADic", function () {
-  var tokenizer = null; // target object
+describe("tokenizer for IPADic", () => {
+  let tokenizer = null; // target object
 
   before(function (done) {
     this.timeout(5 * 60 * 1000); // 5 min
-    kuromoji.builder({ dicPath: DIC_DIR }).build(function (error, _tokenizer) {
+    kuromoji.builder({ dicPath: DIC_DIR }).build((error, _tokenizer) => {
       tokenizer = _tokenizer;
       expect(tokenizer).to.be.a("object");
       done();
     });
   });
 
-  it("Sentence すもももももももものうち is tokenized properly", function () {
-    var path = tokenizer.tokenize("すもももももももものうち");
-    var expected_tokens = [
+  it("sentence すもももももももものうち is tokenized properly", () => {
+    const path = tokenizer.tokenize("すもももももももものうち");
+    const expected_tokens = [
       {
         word_type: "KNOWN",
         word_position: 1,
@@ -164,35 +164,35 @@ describe("Tokenizer for IPADic", function () {
 
     expect(path).to.have.length(7);
 
-    for (var i = 0; i < expected_tokens.length; i++) {
-      var expected_token = expected_tokens[i];
-      var target_token = path[i];
-      for (var key in expected_token) {
+    for (let i = 0; i < expected_tokens.length; i++) {
+      const expected_token = expected_tokens[i];
+      const target_token = path[i];
+      for (const key in expected_token) {
         expect(target_token).to.have.property(key, expected_token[key]);
       }
     }
   });
-  it("Sentence include unknown words となりのトトロ are tokenized properly", function () {
-    var path = tokenizer.tokenize("となりのトトロ");
+  it("sentence include unknown words となりのトトロ are tokenized properly", () => {
+    const path = tokenizer.tokenize("となりのトトロ");
     expect(path).to.have.length(3);
   });
-  it("研究 is not split", function () {
-    var path = tokenizer.tokenize("研究");
+  it("研究 is not split", () => {
+    const path = tokenizer.tokenize("研究");
     expect(path).to.have.length(1);
   });
-  it("Blank input", function () {
-    var path = tokenizer.tokenize("");
+  it("blank input", () => {
+    const path = tokenizer.tokenize("");
     expect(path).to.have.length(0);
   });
-  it("Sentence include UTF-16 surrogate pair", function () {
-    var path = tokenizer.tokenize("𠮷野屋");
+  it("sentence include UTF-16 surrogate pair", () => {
+    const path = tokenizer.tokenize("𠮷野屋");
     expect(path).to.have.length(3);
     expect(path[0].word_position).to.eql(1);
     expect(path[1].word_position).to.eql(2);
     expect(path[2].word_position).to.eql(3);
   });
-  it("Sentence include punctuation あ、あ。あ、あ。 returns correct positions", function () {
-    var path = tokenizer.tokenize("あ、あ。あ、あ。");
+  it("sentence include punctuation あ、あ。あ、あ。 returns correct positions", () => {
+    const path = tokenizer.tokenize("あ、あ。あ、あ。");
     expect(path).to.have.length(8);
     expect(path[0].word_position).to.eql(1);
     expect(path[1].word_position).to.eql(2);

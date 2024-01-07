@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-"use strict";
 
-var TokenInfoDictionary = require("./TokenInfoDictionary");
-var CharacterDefinition = require("./CharacterDefinition");
-var ByteBuffer = require("../util/ByteBuffer");
+
+const TokenInfoDictionary = require("./TokenInfoDictionary");
+const CharacterDefinition = require("./CharacterDefinition");
+const ByteBuffer = require("../util/ByteBuffer");
 
 /**
  * UnknownDictionary
