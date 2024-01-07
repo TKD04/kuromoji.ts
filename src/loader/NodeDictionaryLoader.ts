@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 const fs = require("fs");
 const node_zlib = require("zlib");
 const DictionaryLoader = require("./DictionaryLoader");

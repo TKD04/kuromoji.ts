@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 const CharacterDefinition = require("../CharacterDefinition");
 const InvokeDefinitionMap = require("../InvokeDefinitionMap");
 
@@ -58,7 +56,8 @@ CharacterDefinitionBuilder.prototype.putLine = function (line) {
     );
     this.category_mapping.push(mapping);
   }
-  const parsed_range_category_mapping = RANGE_CATEGORY_MAPPING_PATTERN.exec(line);
+  const parsed_range_category_mapping =
+    RANGE_CATEGORY_MAPPING_PATTERN.exec(line);
   if (parsed_range_category_mapping != null) {
     const range_mapping = CharacterDefinition.parseRangeCategoryMapping(
       parsed_range_category_mapping,

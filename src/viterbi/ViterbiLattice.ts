@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 const ViterbiNode = require("./ViterbiNode");
 
 /**

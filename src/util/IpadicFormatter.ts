@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 /**
  * Mappings between IPADIC dictionary features and tokenized results
  * @constructor

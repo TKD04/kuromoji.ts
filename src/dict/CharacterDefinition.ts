@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 const InvokeDefinitionMap = require("./InvokeDefinitionMap");
 const CharacterClass = require("./CharacterClass");
 const SurrogateAwareString = require("../util/SurrogateAwareString");
@@ -62,15 +60,15 @@ CharacterDefinition.parseCharCategory = function (
   const grouping = parseInt(parsed_category_def[3]);
   const max_length = parseInt(parsed_category_def[4]);
   if (!isFinite(invoke) || (invoke !== 0 && invoke !== 1)) {
-    console.log(`char.def parse error. INVOKE is 0 or 1 in:${  invoke}`);
+    console.log(`char.def parse error. INVOKE is 0 or 1 in:${invoke}`);
     return null;
   }
   if (!isFinite(grouping) || (grouping !== 0 && grouping !== 1)) {
-    console.log(`char.def parse error. GROUP is 0 or 1 in:${  grouping}`);
+    console.log(`char.def parse error. GROUP is 0 or 1 in:${grouping}`);
     return null;
   }
   if (!isFinite(max_length) || max_length < 0) {
-    console.log(`char.def parse error. LENGTH is 1 to n:${  max_length}`);
+    console.log(`char.def parse error. LENGTH is 1 to n:${max_length}`);
     return null;
   }
   const is_invoke = invoke === 1;
@@ -91,7 +89,7 @@ CharacterDefinition.parseCategoryMapping = function (parsed_category_mapping) {
   const compatible_category =
     parsed_category_mapping.length > 3 ? parsed_category_mapping.slice(3) : [];
   if (!isFinite(start) || start < 0 || start > 0xffff) {
-    console.log(`char.def parse error. CODE is invalid:${  start}`);
+    console.log(`char.def parse error. CODE is invalid:${start}`);
   }
   return {
     start,
@@ -109,10 +107,10 @@ CharacterDefinition.parseRangeCategoryMapping = function (
   const compatible_category =
     parsed_category_mapping.length > 4 ? parsed_category_mapping.slice(4) : [];
   if (!isFinite(start) || start < 0 || start > 0xffff) {
-    console.log(`char.def parse error. CODE is invalid:${  start}`);
+    console.log(`char.def parse error. CODE is invalid:${start}`);
   }
   if (!isFinite(end) || end < 0 || end > 0xffff) {
-    console.log(`char.def parse error. CODE is invalid:${  end}`);
+    console.log(`char.def parse error. CODE is invalid:${end}`);
   }
   return {
     start,
@@ -146,7 +144,8 @@ CharacterDefinition.prototype.initCategoryMappings = function (
           if (compatible_category == null) {
             continue;
           }
-          const class_id = this.invoke_definition_map.lookup(compatible_category); // Default Category
+          const class_id =
+            this.invoke_definition_map.lookup(compatible_category); // Default Category
           if (class_id == null) {
             continue;
           }

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-const {expect} = require("chai");
+const { expect } = require("chai");
 const SurrogateAwareString = require("./SurrogateAwareString");
 
 describe("surrogateAwareString", () => {

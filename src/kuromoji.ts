@@ -15,17 +15,15 @@
  * limitations under the License.
  */
 
-
-
 const TokenizerBuilder = require("./TokenizerBuilder");
 const DictionaryBuilder = require("./dict/builder/DictionaryBuilder");
 
 // Public methods
 const kuromoji = {
-  builder (option) {
+  builder(option) {
     return new TokenizerBuilder(option);
   },
-  dictionaryBuilder () {
+  dictionaryBuilder() {
     return new DictionaryBuilder();
   },
 };

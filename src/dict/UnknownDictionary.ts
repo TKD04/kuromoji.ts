@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 const TokenInfoDictionary = require("./TokenInfoDictionary");
 const CharacterDefinition = require("./CharacterDefinition");
 const ByteBuffer = require("../util/ByteBuffer");

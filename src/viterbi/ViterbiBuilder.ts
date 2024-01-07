@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 const ViterbiNode = require("./ViterbiNode");
 const ViterbiLattice = require("./ViterbiLattice");
 const SurrogateAwareString = require("../util/SurrogateAwareString");
@@ -41,7 +39,11 @@ ViterbiBuilder.prototype.build = function (sentence_str) {
   const lattice = new ViterbiLattice();
   const sentence = new SurrogateAwareString(sentence_str);
 
-  let key; let trie_id; let left_id; let right_id; let word_cost;
+  let key;
+  let trie_id;
+  let left_id;
+  let right_id;
+  let word_cost;
   for (let pos = 0; pos < sentence.length; pos++) {
     const tail = sentence.slice(pos);
     const vocabulary = this.trie.commonPrefixSearch(tail);
@@ -81,7 +83,9 @@ ViterbiBuilder.prototype.build = function (sentence_str) {
     // Unknown word processing
     const surrogate_aware_tail = new SurrogateAwareString(tail);
     const head_char = new SurrogateAwareString(surrogate_aware_tail.charAt(0));
-    const head_char_class = this.unknown_dictionary.lookup(head_char.toString());
+    const head_char_class = this.unknown_dictionary.lookup(
+      head_char.toString(),
+    );
     if (
       vocabulary == null ||
       vocabulary.length === 0 ||

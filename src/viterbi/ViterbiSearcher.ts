@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 /**
  * ViterbiSearcher is for searching best Viterbi path
  * @param {ConnectionCosts} connection_costs Connection costs matrix
@@ -37,7 +35,9 @@ ViterbiSearcher.prototype.search = function (lattice) {
 };
 
 ViterbiSearcher.prototype.forward = function (lattice) {
-  let i; let j; let k;
+  let i;
+  let j;
+  let k;
   for (i = 1; i <= lattice.eos_pos; i++) {
     const nodes = lattice.nodes_end_at[i];
     if (nodes == null) {

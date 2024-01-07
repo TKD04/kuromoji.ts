@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-const {expect} = require("chai");
+const { expect } = require("chai");
 const kuromoji = require("../src/kuromoji.js"); // Not to be browserifiy-ed
 const Tokenizer = require("./Tokenizer");
 

@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 const zlib = require("zlibjs/bin/gunzip.min.js");
 const DictionaryLoader = require("./DictionaryLoader");
 

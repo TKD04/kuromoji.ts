@@ -1,10 +1,8 @@
-
-
 const fs = require("fs");
 const gulp = require("gulp");
 const del = require("del");
 const sequence = require("run-sequence");
-const {merge} = require("event-stream");
+const { merge } = require("event-stream");
 const jshint = require("gulp-jshint");
 const browserify = require("browserify");
 const source = require("vinyl-source-stream");
@@ -19,15 +17,19 @@ const bump = require("gulp-bump");
 const argv = require("minimist")(process.argv.slice(2));
 const git = require("gulp-git");
 
-gulp.task("clean", (done) => del([".publish/", "coverage/", "build/", "publish/"], done));
+gulp.task("clean", (done) =>
+  del([".publish/", "coverage/", "build/", "publish/"], done)
+);
 
-gulp.task("build", ["clean"], () => browserify({
+gulp.task("build", ["clean"], () =>
+  browserify({
     entries: ["src/kuromoji.js"],
     standalone: "kuromoji", // window.kuromoji
   })
     .bundle()
     .pipe(source("kuromoji.js"))
-    .pipe(gulp.dest("build/")));
+    .pipe(gulp.dest("build/"))
+);
 
 gulp.task("watch", () => {
   gulp.watch(["src/**/*.js", "test/**/*.js"], ["lint", "build", "jsdoc"]);
@@ -109,28 +111,28 @@ gulp.task("create-dat-files", (done) => {
       const base_buffer = toBuffer(dic.trie.bc.getBaseBuffer());
       const check_buffer = toBuffer(dic.trie.bc.getCheckBuffer());
       const token_info_buffer = toBuffer(
-        dic.token_info_dictionary.dictionary.buffer,
+        dic.token_info_dictionary.dictionary.buffer
       );
       const tid_pos_buffer = toBuffer(
-        dic.token_info_dictionary.pos_buffer.buffer,
+        dic.token_info_dictionary.pos_buffer.buffer
       );
       const tid_map_buffer = toBuffer(
-        dic.token_info_dictionary.targetMapToBuffer(),
+        dic.token_info_dictionary.targetMapToBuffer()
       );
       const connection_costs_buffer = toBuffer(dic.connection_costs.buffer);
       const unk_buffer = toBuffer(dic.unknown_dictionary.dictionary.buffer);
       const unk_pos_buffer = toBuffer(dic.unknown_dictionary.pos_buffer.buffer);
       const unk_map_buffer = toBuffer(
-        dic.unknown_dictionary.targetMapToBuffer(),
+        dic.unknown_dictionary.targetMapToBuffer()
       );
       const char_map_buffer = toBuffer(
-        dic.unknown_dictionary.character_definition.character_category_map,
+        dic.unknown_dictionary.character_definition.character_category_map
       );
       const char_compat_map_buffer = toBuffer(
-        dic.unknown_dictionary.character_definition.compatible_category_map,
+        dic.unknown_dictionary.character_definition.compatible_category_map
       );
       const invoke_definition_map_buffer = toBuffer(
-        dic.unknown_dictionary.character_definition.invoke_definition_map.toBuffer(),
+        dic.unknown_dictionary.character_definition.invoke_definition_map.toBuffer()
       );
 
       fs.writeFileSync("dict/base.dat", base_buffer);
@@ -150,7 +152,9 @@ gulp.task("create-dat-files", (done) => {
     });
 });
 
-gulp.task("compress-dict", () => gulp.src("dict/*.dat").pipe(gzip()).pipe(gulp.dest("dict/")));
+gulp.task("compress-dict", () =>
+  gulp.src("dict/*.dat").pipe(gzip()).pipe(gulp.dest("dict/"))
+);
 
 gulp.task("clean-dat-files", (done) => del(["dict/*.dat"], done));
 
@@ -158,9 +162,9 @@ gulp.task("build-dict", ["build", "clean-dict"], () => {
   sequence("create-dat-files", "compress-dict", "clean-dat-files");
 });
 
-gulp.task("test", ["build"], () => gulp
-    .src("test/**/*.js", { read: false })
-    .pipe(mocha({ reporter: "list" })));
+gulp.task("test", ["build"], () =>
+  gulp.src("test/**/*.js", { read: false }).pipe(mocha({ reporter: "list" }))
+);
 
 gulp.task("coverage", ["test"], (done) => {
   gulp
@@ -176,10 +180,9 @@ gulp.task("coverage", ["test"], (done) => {
     });
 });
 
-gulp.task("lint", () => gulp
-    .src(["src/**/*.js"])
-    .pipe(jshint())
-    .pipe(jshint.reporter("default")));
+gulp.task("lint", () =>
+  gulp.src(["src/**/*.js"]).pipe(jshint()).pipe(jshint.reporter("default"))
+);
 
 gulp.task("clean-jsdoc", (done) => del(["publish/jsdoc/"], done));
 
@@ -190,11 +193,13 @@ gulp.task("jsdoc", ["clean-jsdoc"], (cb) => {
 
 gulp.task("clean-demo", (done) => del(["publish/demo/"], done));
 
-gulp.task("copy-demo", ["clean-demo", "build"], () => merge(
+gulp.task("copy-demo", ["clean-demo", "build"], () =>
+  merge(
     gulp.src("demo/**/*").pipe(gulp.dest("publish/demo/")),
     gulp.src("build/**/*").pipe(gulp.dest("publish/demo/kuromoji/build/")),
-    gulp.src("dict/**/*").pipe(gulp.dest("publish/demo/kuromoji/dict/")),
-  ));
+    gulp.src("dict/**/*").pipe(gulp.dest("publish/demo/kuromoji/dict/"))
+  )
+);
 
 gulp.task("build-demo", ["copy-demo"], () => bower({ cwd: "publish/demo/" }));
 
@@ -204,11 +209,13 @@ gulp.task("webserver", ["build-demo", "jsdoc"], () => {
       port: 8000,
       livereload: true,
       directoryListing: true,
-    }),
+    })
   );
 });
 
-gulp.task("deploy", ["build-demo", "jsdoc"], () => gulp.src("publish/**/*").pipe(ghPages()));
+gulp.task("deploy", ["build-demo", "jsdoc"], () =>
+  gulp.src("publish/**/*").pipe(ghPages())
+);
 
 gulp.task("version", () => {
   let type = "patch";
@@ -228,7 +235,7 @@ gulp.task("version", () => {
 });
 
 gulp.task("release-commit", () => {
-  const {version} = JSON.parse(fs.readFileSync("./package.json", "utf8"));
+  const { version } = JSON.parse(fs.readFileSync("./package.json", "utf8"));
   return gulp
     .src(".")
     .pipe(git.add())
@@ -236,7 +243,7 @@ gulp.task("release-commit", () => {
 });
 
 gulp.task("release-tag", (callback) => {
-  const {version} = JSON.parse(fs.readFileSync("./package.json", "utf8"));
+  const { version } = JSON.parse(fs.readFileSync("./package.json", "utf8"));
   git.tag(version, `${version} release`, (error) => {
     if (error) {
       return callback(error);

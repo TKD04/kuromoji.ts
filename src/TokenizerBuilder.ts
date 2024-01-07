@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 const Tokenizer = require("./Tokenizer");
 const DictionaryLoader = require("./loader/NodeDictionaryLoader");
 

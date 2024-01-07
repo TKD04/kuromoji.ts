@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 /**
  * CharacterClass
  * @param {number} class_id

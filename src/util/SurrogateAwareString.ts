@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 /**
  * String wrapper for UTF-16 surrogate pair (4 bytes)
  * @param {string} str String to wrap
@@ -87,9 +85,8 @@ SurrogateAwareString.isSurrogatePair = function (ch) {
   if (utf16_code >= 0xd800 && utf16_code <= 0xdbff) {
     // surrogate pair
     return true;
-  } 
-    return false;
-  
+  }
+  return false;
 };
 
 module.exports = SurrogateAwareString;

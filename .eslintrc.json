@@ -1,12 +1,7 @@
 {
-  "plugins": [
-    "@typescript-eslint"
-  ],
+  "plugins": ["@typescript-eslint"],
   "rules": {
-    "import/consistent-type-specifier-style": [
-      "error",
-      "prefer-top-level"
-    ],
+    "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
     "@typescript-eslint/consistent-type-imports": "error",
     "@typescript-eslint/no-import-type-side-effects": "error"
   },
@@ -16,13 +11,9 @@
   "root": true,
   "overrides": [
     {
-      "files": [
-        "*.test.ts"
-      ],
+      "files": ["*.test.ts"],
       "extends": "plugin:jest/all",
-      "plugins": [
-        "jest"
-      ],
+      "plugins": ["jest"],
       "env": {
         "jest": true
       }
@@ -35,9 +26,7 @@
     "prettier"
   ],
   "parser": "@typescript-eslint/parser",
-  "ignorePatterns": [
-    "/dist/"
-  ],
+  "ignorePatterns": ["/dist/"],
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": "latest",

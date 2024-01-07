@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-const {expect} = require("chai");
+const { expect } = require("chai");
 const ByteBuffer = require("./ByteBuffer");
 
 describe("byteBuffer static methods", () => {

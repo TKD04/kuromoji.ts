@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 const ByteBuffer = require("../util/ByteBuffer");
 const CharacterClass = require("./CharacterClass");
 

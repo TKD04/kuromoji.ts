@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-const {expect} = require("chai");
+const { expect } = require("chai");
 const DictionaryLoader = require("./NodeDictionaryLoader");
 
 const DIC_DIR = "dict/";

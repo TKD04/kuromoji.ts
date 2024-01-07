@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-const {expect} = require("chai");
+const { expect } = require("chai");
 const DictionaryLoader = require("../loader/NodeDictionaryLoader");
 const ViterbiBuilder = require("./ViterbiBuilder");
 
@@ -41,9 +41,9 @@ describe("viterbiBuilder", () => {
       if (nodes == null) {
         continue;
       }
-      expect(
-        nodes.map((node) => node.surface_form),
-      ).to.include("トトロ".slice(0, i));
+      expect(nodes.map((node) => node.surface_form)).to.include(
+        "トトロ".slice(0, i),
+      );
     }
   });
 });

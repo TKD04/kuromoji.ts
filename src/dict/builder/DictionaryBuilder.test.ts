@@ -16,16 +16,16 @@
  */
 
 const fs = require("fs");
-const {expect} = require("chai");
+const { expect } = require("chai");
 
 const kuromoji = require("../../kuromoji");
 const Tokenizer = require("../../Tokenizer");
 
 const DIC_DIR = "test/resource/minimum-dic/";
-const connection_costs_file = `${DIC_DIR  }matrix.def`;
-const char_def_file = `${DIC_DIR  }char.def`;
-const unk_def_file = `${DIC_DIR  }unk.def`;
-const tid_dic_file = `${DIC_DIR  }minimum.csv`;
+const connection_costs_file = `${DIC_DIR}matrix.def`;
+const char_def_file = `${DIC_DIR}char.def`;
+const unk_def_file = `${DIC_DIR}unk.def`;
+const tid_dic_file = `${DIC_DIR}minimum.csv`;
 
 describe("dictionaryBuilder", function () {
   this.timeout(30000);

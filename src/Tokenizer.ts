@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 const ViterbiBuilder = require("./viterbi/ViterbiBuilder");
 const ViterbiSearcher = require("./viterbi/ViterbiSearcher");
 const IpadicFormatter = require("./util/IpadicFormatter");
@@ -88,7 +86,9 @@ Tokenizer.prototype.tokenizeForSentence = function (sentence, tokens) {
   for (let j = 0; j < best_path.length; j++) {
     const node = best_path[j];
 
-    var token; var features; var features_line;
+    var token;
+    var features;
+    var features_line;
     if (node.type === "KNOWN") {
       features_line = this.token_info_dictionary.getFeatures(node.name);
       if (features_line == null) {

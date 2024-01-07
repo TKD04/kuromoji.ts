@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 const doublearray = require("doublearray");
 const TokenInfoDictionary = require("./TokenInfoDictionary");
 const ConnectionCosts = require("./ConnectionCosts");

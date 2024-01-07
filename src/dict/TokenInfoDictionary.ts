@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 const ByteBuffer = require("../util/ByteBuffer");
 
 /**
@@ -83,7 +81,7 @@ TokenInfoDictionary.prototype.put = function (
   this.dictionary.putShort(right_id);
   this.dictionary.putShort(word_cost);
   this.dictionary.putInt(pos_id);
-  this.pos_buffer.putString(`${surface_form  },${  feature}`);
+  this.pos_buffer.putString(`${surface_form},${feature}`);
 
   return token_info_id;
 };

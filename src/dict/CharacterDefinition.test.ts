@@ -16,11 +16,10 @@
  */
 
 const fs = require("fs");
-const {expect} = require("chai");
+const { expect } = require("chai");
 const CharacterDefinition = require("./CharacterDefinition");
 const InvokeDefinitionMap = require("./InvokeDefinitionMap");
 const CharacterDefinitionBuilder = require("./builder/CharacterDefinitionBuilder");
-
 
 const DIC_DIR = "test/resource/minimum-dic/";
 
@@ -29,7 +28,7 @@ describe("characterDefinition from char.def", () => {
 
   before("Create CharacterDefinition", (done) => {
     const cd_builder = new CharacterDefinitionBuilder();
-    fs.readFileSync(`${DIC_DIR  }char.def`, "utf-8")
+    fs.readFileSync(`${DIC_DIR}char.def`, "utf-8")
       .split("\n")
       .map((line) => {
         cd_builder.putLine(line);

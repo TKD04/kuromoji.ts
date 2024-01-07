@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 const doublearray = require("doublearray");
 const DynamicDictionaries = require("../DynamicDictionaries");
 const TokenInfoDictionary = require("../TokenInfoDictionary");

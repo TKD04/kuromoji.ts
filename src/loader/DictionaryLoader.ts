@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 const path = require("path");
 const async = require("async");
 const DynamicDictionaries = require("../dict/DynamicDictionaries");
@@ -40,9 +38,9 @@ DictionaryLoader.prototype.loadArrayBuffer = function (file, callback) {
  * @param {DictionaryLoader~onLoad} load_callback Callback function called after loaded
  */
 DictionaryLoader.prototype.load = function (load_callback) {
-  const {dic} = this;
-  const {dic_path} = this;
-  const {loadArrayBuffer} = this;
+  const { dic } = this;
+  const { dic_path } = this;
+  const { loadArrayBuffer } = this;
 
   async.parallel(
     [
@@ -51,15 +49,12 @@ DictionaryLoader.prototype.load = function (load_callback) {
         async.map(
           ["base.dat.gz", "check.dat.gz"],
           (filename, _callback) => {
-            loadArrayBuffer(
-              path.join(dic_path, filename),
-              (err, buffer) => {
-                if (err) {
-                  return _callback(err);
-                }
-                _callback(null, buffer);
-              },
-            );
+            loadArrayBuffer(path.join(dic_path, filename), (err, buffer) => {
+              if (err) {
+                return _callback(err);
+              }
+              _callback(null, buffer);
+            });
           },
           (err, buffers) => {
             if (err) {
@@ -78,15 +73,12 @@ DictionaryLoader.prototype.load = function (load_callback) {
         async.map(
           ["tid.dat.gz", "tid_pos.dat.gz", "tid_map.dat.gz"],
           (filename, _callback) => {
-            loadArrayBuffer(
-              path.join(dic_path, filename),
-              (err, buffer) => {
-                if (err) {
-                  return _callback(err);
-                }
-                _callback(null, buffer);
-              },
-            );
+            loadArrayBuffer(path.join(dic_path, filename), (err, buffer) => {
+              if (err) {
+                return _callback(err);
+              }
+              _callback(null, buffer);
+            });
           },
           (err, buffers) => {
             if (err) {
@@ -107,17 +99,14 @@ DictionaryLoader.prototype.load = function (load_callback) {
       },
       // Connection cost matrix
       function (callback) {
-        loadArrayBuffer(
-          path.join(dic_path, "cc.dat.gz"),
-          (err, buffer) => {
-            if (err) {
-              return callback(err);
-            }
-            const cc_buffer = new Int16Array(buffer);
-            dic.loadConnectionCosts(cc_buffer);
-            callback(null);
-          },
-        );
+        loadArrayBuffer(path.join(dic_path, "cc.dat.gz"), (err, buffer) => {
+          if (err) {
+            return callback(err);
+          }
+          const cc_buffer = new Int16Array(buffer);
+          dic.loadConnectionCosts(cc_buffer);
+          callback(null);
+        });
       },
       // Unknown dictionaries
       function (callback) {
@@ -131,15 +120,12 @@ DictionaryLoader.prototype.load = function (load_callback) {
             "unk_invoke.dat.gz",
           ],
           (filename, _callback) => {
-            loadArrayBuffer(
-              path.join(dic_path, filename),
-              (err, buffer) => {
-                if (err) {
-                  return _callback(err);
-                }
-                _callback(null, buffer);
-              },
-            );
+            loadArrayBuffer(path.join(dic_path, filename), (err, buffer) => {
+              if (err) {
+                return _callback(err);
+              }
+              _callback(null, buffer);
+            });
           },
           (err, buffers) => {
             if (err) {

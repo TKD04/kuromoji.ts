@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-
-
 /**
  * Convert String (UTF-16) to UTF-8 ArrayBuffer
  *
@@ -28,7 +26,7 @@ const stringToUtf8Bytes = function (str) {
   const bytes = new Uint8Array(str.length * 4);
 
   let i = 0;
-    let j = 0;
+  let j = 0;
 
   while (i < str.length) {
     var unicode_code;
@@ -85,7 +83,13 @@ const stringToUtf8Bytes = function (str) {
  */
 const utf8BytesToString = function (bytes) {
   let str = "";
-  let code; let b1; let b2; let b3; let b4; let upper; let lower;
+  let code;
+  let b1;
+  let b2;
+  let b3;
+  let b4;
+  let upper;
+  let lower;
   let i = 0;
 
   while (i < bytes.length) {
@@ -146,7 +150,7 @@ function ByteBuffer(arg) {
     return;
   } else {
     // typeof arg -> String
-    throw `${typeof arg  } is invalid parameter type for ByteBuffer constructor`;
+    throw `${typeof arg} is invalid parameter type for ByteBuffer constructor`;
   }
   // arg is null or number
   this.buffer = new Uint8Array(initial_size);
@@ -189,7 +193,7 @@ ByteBuffer.prototype.get = function (index) {
 // Write short to buffer by little endian
 ByteBuffer.prototype.putShort = function (num) {
   if (num > 0xffff) {
-    throw `${num  } is over short value`;
+    throw `${num} is over short value`;
   }
   const lower = 0x00ff & num;
   const upper = (0xff00 & num) >> 8;
@@ -218,7 +222,7 @@ ByteBuffer.prototype.getShort = function (index) {
 // Write integer to buffer by little endian
 ByteBuffer.prototype.putInt = function (num) {
   if (num > 0xffffffff) {
-    throw `${num  } is over integer value`;
+    throw `${num} is over integer value`;
   }
   const b0 = 0x000000ff & num;
   const b1 = (0x0000ff00 & num) >> 8;
@@ -264,7 +268,7 @@ ByteBuffer.prototype.putString = function (str) {
 
 ByteBuffer.prototype.getString = function (index) {
   const buf = [];
-    let ch;
+  let ch;
   if (index == null) {
     index = this.position;
   }
