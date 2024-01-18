@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-const Tokenizer = require("./Tokenizer");
-const DictionaryLoader = require("./loader/NodeDictionaryLoader");
+import Tokenizer from "./Tokenizer";
+import DictionaryLoader from "./loader/DictionaryLoader";
 
 /**
  * TokenizerBuilder create Tokenizer instance.
@@ -24,30 +24,32 @@ const DictionaryLoader = require("./loader/NodeDictionaryLoader");
  * @param {string} option.dicPath Dictionary directory path (or URL using in browser)
  * @constructor
  */
-function TokenizerBuilder(option) {
-  if (option.dicPath == null) {
-    this.dic_path = "dict/";
-  } else {
-    this.dic_path = option.dicPath;
+export default class TokenizerBuilder {
+  dic_path;
+
+  constructor(option) {
+    if (option.dicPath == null) {
+      this.dic_path = "dict/";
+    } else {
+      this.dic_path = option.dicPath;
+    }
   }
+
+  /**
+   * Build Tokenizer instance by asynchronous manner
+   * @param {TokenizerBuilder~onLoad} callback Callback function
+   */
+  static build(callback) {
+    const loader = new DictionaryLoader(this.dic_path);
+    loader.load((err, dic) => {
+      callback(err, new Tokenizer(dic));
+    });
+  }
+
+  /**
+   * Callback used by build
+   * @callback TokenizerBuilder~onLoad
+   * @param {Object} err Error object
+   * @param {Tokenizer} tokenizer Prepared Tokenizer
+   */
 }
-
-/**
- * Build Tokenizer instance by asynchronous manner
- * @param {TokenizerBuilder~onLoad} callback Callback function
- */
-TokenizerBuilder.prototype.build = function (callback) {
-  const loader = new DictionaryLoader(this.dic_path);
-  loader.load((err, dic) => {
-    callback(err, new Tokenizer(dic));
-  });
-};
-
-/**
- * Callback used by build
- * @callback TokenizerBuilder~onLoad
- * @param {Object} err Error object
- * @param {Tokenizer} tokenizer Prepared Tokenizer
- */
-
-module.exports = TokenizerBuilder;

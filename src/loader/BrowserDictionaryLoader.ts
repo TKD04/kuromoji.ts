@@ -15,51 +15,49 @@
  * limitations under the License.
  */
 
-const zlib = require("zlibjs/bin/gunzip.min.js");
-const DictionaryLoader = require("./DictionaryLoader");
+import zlibjs from "zlibjs";
+import DictionaryLoader from "./DictionaryLoader";
 
 /**
  * BrowserDictionaryLoader inherits DictionaryLoader, using jQuery XHR for download
  * @param {string} dic_path Dictionary path
  * @constructor
  */
-function BrowserDictionaryLoader(dic_path) {
-  DictionaryLoader.apply(this, [dic_path]);
+export default class BrowserDictionaryLoader extends DictionaryLoader {
+  constructor(dic_path) {
+    DictionaryLoader.apply(this, [dic_path]);
+  }
+
+  /**
+   * Utility function to load gzipped dictionary
+   * @param {string} url Dictionary URL
+   * @param {BrowserDictionaryLoader~onLoad} callback Callback function
+   */
+  static loadArrayBuffer(url, callback) {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.responseType = "arraybuffer";
+    xhr.onload = () => {
+      if (this.status > 0 && this.status !== 200) {
+        callback(xhr.statusText, null);
+        return;
+      }
+      const arraybuffer = this.response;
+
+      const gz = new zlibjs.Zlib.Gunzip(new Uint8Array(arraybuffer));
+      const typed_array = gz.decompress();
+      callback(null, typed_array.buffer);
+    };
+    xhr.onerror = (err) => {
+      callback(err, null);
+    };
+    xhr.send();
+  }
+
+  /**
+   * Callback
+   * @callback BrowserDictionaryLoader~onLoad
+   * @param {Object} err Error object
+   * @param {Uint8Array} buffer Loaded buffer
+   */
 }
-
-BrowserDictionaryLoader.prototype = Object.create(DictionaryLoader.prototype);
-
-/**
- * Utility function to load gzipped dictionary
- * @param {string} url Dictionary URL
- * @param {BrowserDictionaryLoader~onLoad} callback Callback function
- */
-BrowserDictionaryLoader.prototype.loadArrayBuffer = function (url, callback) {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", url, true);
-  xhr.responseType = "arraybuffer";
-  xhr.onload = function () {
-    if (this.status > 0 && this.status !== 200) {
-      callback(xhr.statusText, null);
-      return;
-    }
-    const arraybuffer = this.response;
-
-    const gz = new zlib.Zlib.Gunzip(new Uint8Array(arraybuffer));
-    const typed_array = gz.decompress();
-    callback(null, typed_array.buffer);
-  };
-  xhr.onerror = function (err) {
-    callback(err, null);
-  };
-  xhr.send();
-};
-
-/**
- * Callback
- * @callback BrowserDictionaryLoader~onLoad
- * @param {Object} err Error object
- * @param {Uint8Array} buffer Loaded buffer
- */
-
-module.exports = BrowserDictionaryLoader;

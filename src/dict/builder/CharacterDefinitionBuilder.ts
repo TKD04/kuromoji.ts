@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-const CharacterDefinition = require("../CharacterDefinition");
-const InvokeDefinitionMap = require("../InvokeDefinitionMap");
+import CharacterDefinition from "../CharacterDefinition";
+import InvokeDefinitionMap from "../InvokeDefinitionMap";
 
 const CATEGORY_DEF_PATTERN = /^(\w+)\s+(\d)\s+(\d)\s+(\d)/;
 const CATEGORY_MAPPING_PATTERN =
@@ -28,49 +28,57 @@ const RANGE_CATEGORY_MAPPING_PATTERN =
  * CharacterDefinitionBuilder
  * @constructor
  */
-function CharacterDefinitionBuilder() {
-  this.char_def = new CharacterDefinition();
-  this.char_def.invoke_definition_map = new InvokeDefinitionMap();
-  this.character_category_definition = [];
-  this.category_mapping = [];
-}
+export default class CharacterDefinitionBuilder {
+  char_def;
 
-CharacterDefinitionBuilder.prototype.putLine = function (line) {
-  const parsed_category_def = CATEGORY_DEF_PATTERN.exec(line);
-  if (parsed_category_def != null) {
-    const class_id = this.character_category_definition.length;
-    const char_class = CharacterDefinition.parseCharCategory(
-      class_id,
-      parsed_category_def,
-    );
-    if (char_class == null) {
+  character_category_definition;
+
+  category_mapping;
+
+  constructor() {
+    this.char_def = new CharacterDefinition();
+    this.char_def.invoke_definition_map = new InvokeDefinitionMap();
+    this.character_category_definition = [];
+    this.category_mapping = [];
+  }
+
+  static putLine(line) {
+    const parsed_category_def = CATEGORY_DEF_PATTERN.exec(line);
+    if (parsed_category_def != null) {
+      const class_id = this.character_category_definition.length;
+      const char_class = CharacterDefinition.parseCharCategory(
+        class_id,
+        parsed_category_def
+      );
+      if (char_class == null) {
+        return;
+      }
+      this.character_category_definition.push(char_class);
       return;
     }
-    this.character_category_definition.push(char_class);
-    return;
+    const parsed_category_mapping = CATEGORY_MAPPING_PATTERN.exec(line);
+    if (parsed_category_mapping != null) {
+      const mapping = CharacterDefinition.parseCategoryMapping(
+        parsed_category_mapping
+      );
+      this.category_mapping.push(mapping);
+    }
+    const parsed_range_category_mapping =
+      RANGE_CATEGORY_MAPPING_PATTERN.exec(line);
+    if (parsed_range_category_mapping != null) {
+      const range_mapping = CharacterDefinition.parseRangeCategoryMapping(
+        parsed_range_category_mapping
+      );
+      this.category_mapping.push(range_mapping);
+    }
   }
-  const parsed_category_mapping = CATEGORY_MAPPING_PATTERN.exec(line);
-  if (parsed_category_mapping != null) {
-    const mapping = CharacterDefinition.parseCategoryMapping(
-      parsed_category_mapping,
-    );
-    this.category_mapping.push(mapping);
-  }
-  const parsed_range_category_mapping =
-    RANGE_CATEGORY_MAPPING_PATTERN.exec(line);
-  if (parsed_range_category_mapping != null) {
-    const range_mapping = CharacterDefinition.parseRangeCategoryMapping(
-      parsed_range_category_mapping,
-    );
-    this.category_mapping.push(range_mapping);
-  }
-};
 
-CharacterDefinitionBuilder.prototype.build = function () {
-  // TODO If DEFAULT category does not exist, throw error
-  this.char_def.invoke_definition_map.init(this.character_category_definition);
-  this.char_def.initCategoryMappings(this.category_mapping);
-  return this.char_def;
-};
-
-module.exports = CharacterDefinitionBuilder;
+  static build() {
+    // TODO If DEFAULT category does not exist, throw error
+    this.char_def.invoke_definition_map.init(
+      this.character_category_definition
+    );
+    this.char_def.initCategoryMappings(this.category_mapping);
+    return this.char_def;
+  }
+}

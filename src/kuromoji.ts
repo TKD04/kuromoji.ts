@@ -15,17 +15,16 @@
  * limitations under the License.
  */
 
-const TokenizerBuilder = require("./TokenizerBuilder");
-const DictionaryBuilder = require("./dict/builder/DictionaryBuilder");
+import TokenizerBuilder from "./TokenizerBuilder";
+import DictionaryBuilder from "./dict/builder/DictionaryBuilder";
 
 // Public methods
-const kuromoji = {
-  builder(option) {
+export default class Kuromoji {
+  static builder(option) {
     return new TokenizerBuilder(option);
-  },
-  dictionaryBuilder() {
-    return new DictionaryBuilder();
-  },
-};
+  }
 
-module.exports = kuromoji;
+  static dictionaryBuilder() {
+    return new DictionaryBuilder();
+  }
+}

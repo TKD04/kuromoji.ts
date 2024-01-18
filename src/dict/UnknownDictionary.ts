@@ -15,55 +15,58 @@
  * limitations under the License.
  */
 
-const TokenInfoDictionary = require("./TokenInfoDictionary");
-const CharacterDefinition = require("./CharacterDefinition");
-const ByteBuffer = require("../util/ByteBuffer");
+import ByteBuffer from "../util/ByteBuffer";
+import CharacterDefinition from "./CharacterDefinition";
+import TokenInfoDictionary from "./TokenInfoDictionary";
 
 /**
  * UnknownDictionary
  * @constructor
  */
-function UnknownDictionary() {
-  this.dictionary = new ByteBuffer(10 * 1024 * 1024);
-  this.target_map = {}; // class_id (of CharacterClass) -> token_info_id (of unknown class)
-  this.pos_buffer = new ByteBuffer(10 * 1024 * 1024);
-  this.character_definition = null;
-}
+export default class UnknownDictionary extends TokenInfoDictionary {
+  dictionary: ByteBuffer;
 
-// Inherit from TokenInfoDictionary as a super class
-UnknownDictionary.prototype = Object.create(TokenInfoDictionary.prototype);
+  target_map;
 
-UnknownDictionary.prototype.characterDefinition = function (
-  character_definition,
-) {
-  this.character_definition = character_definition;
-  return this;
-};
+  pos_buffer: ByteBuffer;
 
-UnknownDictionary.prototype.lookup = function (ch) {
-  return this.character_definition.lookup(ch);
-};
+  character_definition;
 
-UnknownDictionary.prototype.lookupCompatibleCategory = function (ch) {
-  return this.character_definition.lookupCompatibleCategory(ch);
-};
+  constructor() {
+    this.dictionary = new ByteBuffer(10 * 1024 * 1024);
+    this.target_map = {}; // class_id (of CharacterClass) -> token_info_id (of unknown class)
+    this.pos_buffer = new ByteBuffer(10 * 1024 * 1024);
+    this.character_definition = null;
+  }
 
-UnknownDictionary.prototype.loadUnknownDictionaries = function (
-  unk_buffer,
-  unk_pos_buffer,
-  unk_map_buffer,
-  cat_map_buffer,
-  compat_cat_map_buffer,
-  invoke_def_buffer,
-) {
-  this.loadDictionary(unk_buffer);
-  this.loadPosVector(unk_pos_buffer);
-  this.loadTargetMap(unk_map_buffer);
-  this.character_definition = CharacterDefinition.load(
+  static characterDefinition(character_definition) {
+    this.character_definition = character_definition;
+    return this;
+  }
+
+  static lookup(ch: string) {
+    return this.character_definition.lookup(ch);
+  }
+
+  static lookupCompatibleCategory(ch: string) {
+    return this.character_definition.lookupCompatibleCategory(ch);
+  }
+
+  static loadUnknownDictionaries(
+    unk_buffer,
+    unk_pos_buffer,
+    unk_map_buffer,
     cat_map_buffer,
     compat_cat_map_buffer,
-    invoke_def_buffer,
-  );
-};
-
-module.exports = UnknownDictionary;
+    invoke_def_buffer
+  ) {
+    this.loadDictionary(unk_buffer);
+    this.loadPosVector(unk_pos_buffer);
+    this.loadTargetMap(unk_map_buffer);
+    this.character_definition = CharacterDefinition.load(
+      cat_map_buffer,
+      compat_cat_map_buffer,
+      invoke_def_buffer
+    );
+  }
+}
