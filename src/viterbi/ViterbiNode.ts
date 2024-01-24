@@ -19,15 +19,6 @@ import type { ViterbiNodeType } from "./ViterbiNodeType";
 
 /**
  * ViterbiNode is a node of ViterbiLattice
- * @param {number} node_name Word ID
- * @param {number} node_cost Word cost to generate
- * @param {number} start_pos Start position from 1
- * @param {number} length Word length
- * @param {string} type Node type (KNOWN, UNKNOWN, BOS, EOS, ...)
- * @param {number} left_id Left context ID
- * @param {number} right_id Right context ID
- * @param {string} surface_form Surface form of this word
- * @constructor
  */
 export default class ViterbiNode {
   static createBeginOfStatement(): ViterbiNode {
@@ -38,48 +29,98 @@ export default class ViterbiNode {
     return new ViterbiNode(-1, 0, startPos, 0, "EOS", 0, 0, "");
   }
 
-  name: number;
+  readonly #NAME: number;
 
-  cost: number;
+  readonly #COST: number;
 
-  shortestCost: number;
+  readonly #SHORTEST_COST: number;
 
-  start_pos: number;
+  readonly #START_POSITION: number;
 
-  length: number;
+  readonly #LENGTH: number;
 
-  type: ViterbiNodeType;
+  readonly #TYPE: ViterbiNodeType;
 
-  left_id: number;
+  readonly #LEFT_ID: number;
 
-  right_id: number;
+  readonly #RIGHT_ID: number;
 
-  prev: ViterbiNode | undefined = undefined;
+  readonly #PREV: ViterbiNode | undefined = undefined;
 
-  surface_form: string;
+  readonly #SURFACE_FORM: string;
 
+  /**
+   * @param name Word ID
+   * @param cost Word cost to generate
+   * @param startPosition Start position from 1
+   * @param length Word length
+   * @param type Node type (KNOWN, UNKNOWN, BOS, EOS, ...)
+   * @param leftId Left context ID
+   * @param rightId Right context ID
+   * @param surfaceForm Surface form of this word
+   */
   constructor(
-    node_name: number,
-    node_cost: number,
-    start_pos: number,
+    name: number,
+    cost: number,
+    startPosition: number,
     length: number,
     type: ViterbiNodeType,
-    left_id: number,
-    right_id: number,
-    surface_form: string
+    leftId: number,
+    rightId: number,
+    surfaceForm: string
   ) {
-    this.name = node_name;
-    this.cost = node_cost;
-    this.shortestCost = type === "BOS" ? 0 : Number.MAX_SAFE_INTEGER;
-    this.start_pos = start_pos;
-    this.length = length;
-    this.type = type;
-    this.left_id = left_id;
-    this.right_id = right_id;
-    this.surface_form = surface_form;
+    this.#NAME = name;
+    this.#COST = cost;
+    this.#SHORTEST_COST = type === "BOS" ? 0 : Number.MAX_SAFE_INTEGER;
+    this.#START_POSITION = startPosition;
+    this.#LENGTH = length;
+    this.#TYPE = type;
+    this.#LEFT_ID = leftId;
+    this.#RIGHT_ID = rightId;
+    this.#SURFACE_FORM = surfaceForm;
+  }
+
+  get name() {
+    return this.#NAME;
+  }
+
+  get cost() {
+    return this.#COST;
+  }
+
+  get shortestCost() {
+    return this.#SHORTEST_COST;
+  }
+
+  get startPosition() {
+    return this.#START_POSITION;
+  }
+
+  get length() {
+    return this.#LENGTH;
+  }
+
+  get type() {
+    return this.#TYPE;
+  }
+
+  get leftId() {
+    return this.#LEFT_ID;
+  }
+
+  get rightId() {
+    return this.#RIGHT_ID;
+  }
+
+  get prev() {
+    return this.#PREV;
+  }
+
+  get surfaceForm() {
+    return this.#SURFACE_FORM;
   }
 
   get lastPos() {
-    return this.start_pos + this.length - 1;
+    return this.#START_POSITION + this.#LENGTH - 1;
   }
 }

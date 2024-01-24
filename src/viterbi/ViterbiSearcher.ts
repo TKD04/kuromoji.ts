@@ -54,7 +54,7 @@ export default class ViterbiSearcher {
         let cost = Number.MAX_VALUE;
         var shortest_prev_node;
 
-        const prev_nodes = lattice.nodes_end_at[node.start_pos - 1];
+        const prev_nodes = lattice.nodes_end_at[node.#START_POSITION - 1];
         if (prev_nodes == null) {
           // TODO process unknown words (repair word lattice)
           continue;
@@ -63,25 +63,25 @@ export default class ViterbiSearcher {
           const prev_node = prev_nodes[k];
 
           var edge_cost;
-          if (node.left_id == null || prev_node.right_id == null) {
+          if (node.#LEFT_ID == null || prev_node.#RIGHT_ID == null) {
             // TODO assert
             console.log("Left or right is null");
             edge_cost = 0;
           } else {
             edge_cost = this.connection_costs.get(
-              prev_node.right_id,
-              node.left_id
+              prev_node.#RIGHT_ID,
+              node.#LEFT_ID
             );
           }
 
-          const _cost = prev_node.shortest_cost + edge_cost + node.cost;
+          const _cost = prev_node.shortest_cost + edge_cost + node.#COST;
           if (_cost < cost) {
             shortest_prev_node = prev_node;
             cost = _cost;
           }
         }
 
-        node.prev = shortest_prev_node;
+        node.#PREV = shortest_prev_node;
         node.shortest_cost = cost;
       }
     }
@@ -92,17 +92,17 @@ export default class ViterbiSearcher {
     const shortest_path = [];
     const eos = lattice.nodes_end_at[lattice.nodes_end_at.length - 1][0];
 
-    let node_back = eos.prev;
+    let node_back = eos.#PREV;
     if (node_back == null) {
       return [];
     }
-    while (node_back.type !== "BOS") {
+    while (node_back.#TYPE !== "BOS") {
       shortest_path.push(node_back);
-      if (node_back.prev == null) {
+      if (node_back.#PREV == null) {
         // TODO Failed to back. Process unknown words?
         return [];
       }
-      node_back = node_back.prev;
+      node_back = node_back.#PREV;
     }
 
     return shortest_path.reverse();
