@@ -120,7 +120,7 @@ export default class ViterbiNode {
     return this.#SURFACE_FORM;
   }
 
-  get lastPos() {
+  lastPosition(): number {
     return this.#START_POSITION + this.#LENGTH - 1;
   }
 }
