@@ -19,12 +19,14 @@ import TokenizerBuilder from "./TokenizerBuilder";
 import DictionaryBuilder from "./dict/builder/DictionaryBuilder";
 
 // Public methods
-export default class Kuromoji {
-  static builder(option) {
+const kuromoji = {
+  builder(option) {
     return new TokenizerBuilder(option);
-  }
+  },
 
-  static dictionaryBuilder() {
+  dictionaryBuilder() {
     return new DictionaryBuilder();
-  }
-}
+  },
+};
+
+export default kuromoji;
