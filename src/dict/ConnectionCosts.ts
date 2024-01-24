@@ -15,49 +15,71 @@
  * limitations under the License.
  */
 
+type ConnectionCostsBuffer = [
+  forwardDimension: number,
+  backwardDimension: number,
+];
+
 /**
  * Connection costs matrix from cc.dat file.
- * 2 dimension matrix [forward_id][backward_id] -> cost
- * @constructor
- * @param {number} forward_dimension
- * @param {number} backward_dimension
  */
 export default class ConnectionCosts {
-  forward_dimension: number;
+  #forwardDimension: number;
 
-  backward_dimension: number;
+  #backwardDimension: number;
 
-  buffer: Int16Array;
+  #buffer: Int16Array;
 
-  constructor(forward_dimension: number, backward_dimension: number) {
-    this.forward_dimension = forward_dimension;
-    this.backward_dimension = backward_dimension;
-
+  /**
+   * 2 dimension matrix [forward_id][backward_id] -> cost
+   */
+  constructor(forwardDimension: number, backwardDimension: number) {
+    this.#forwardDimension = forwardDimension;
+    this.#backwardDimension = backwardDimension;
     // leading 2 integers for forward_dimension, backward_dimension, respectively
-    this.buffer = new Int16Array(forward_dimension * backward_dimension + 2);
-    this.buffer[0] = forward_dimension;
-    this.buffer[1] = backward_dimension;
+    this.#buffer = new Int16Array(forwardDimension * backwardDimension + 2);
+    this.#buffer[0] = forwardDimension;
+    this.#buffer[1] = backwardDimension;
   }
 
-  static put(forward_id: number, backward_id: number, cost: number) {
-    const index = forward_id * this.backward_dimension + backward_id + 2;
-    if (this.buffer.length < index + 1) {
-      throw "ConnectionCosts buffer overflow";
+  get forwardDimension() {
+    return this.#forwardDimension;
+  }
+
+  get backwardDimension() {
+    return this.#backwardDimension;
+  }
+
+  get buffer() {
+    return this.#buffer.slice();
+  }
+
+  get(forwardId: number, backwardId: number): number {
+    const index = forwardId * this.#backwardDimension + backwardId + 2;
+
+    if (this.#buffer.length < index + 1) {
+      throw new Error("ConnectionCosts buffer overflow");
     }
-    this.buffer[index] = cost;
-  }
-
-  static get(forward_id: number, backward_id: number) {
-    const index = forward_id * this.backward_dimension + backward_id + 2;
-    if (this.buffer.length < index + 1) {
-      throw "ConnectionCosts buffer overflow";
+    const cost = this.#buffer[index];
+    if (typeof cost === "undefined") {
+      throw new Error("cost must not be undefined");
     }
-    return this.buffer[index];
+
+    return cost;
   }
 
-  static loadConnectionCosts(connection_costs_buffer: number[]) {
-    this.forward_dimension = connection_costs_buffer[0];
-    this.backward_dimension = connection_costs_buffer[1];
-    this.buffer = connection_costs_buffer;
+  put(forwardId: number, backwardId: number, cost: number): void {
+    const index = forwardId * this.#backwardDimension + backwardId + 2;
+
+    if (this.#buffer.length < index + 1) {
+      throw new Error("ConnectionCosts buffer overflow");
+    }
+
+    this.#buffer[index] = cost;
+  }
+
+  loadConnectionCosts(connectionCostsBuffer: ConnectionCostsBuffer): void {
+    [this.#forwardDimension, this.#backwardDimension] = connectionCostsBuffer;
+    this.#buffer = new Int16Array(connectionCostsBuffer);
   }
 }
