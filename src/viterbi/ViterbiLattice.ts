@@ -33,7 +33,7 @@ export default class ViterbiLattice {
    * @param {ViterbiNode} node
    */
   static append(node: ViterbiNode) {
-    const last_pos = node.start_pos + node.length - 1;
+    const last_pos = node.lastPos;
     if (this.eos_pos < last_pos) {
       this.eos_pos = last_pos;
     }

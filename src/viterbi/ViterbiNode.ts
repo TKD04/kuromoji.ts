@@ -70,4 +70,8 @@ export default class ViterbiNode {
     this.right_id = right_id;
     this.surface_form = surface_form;
   }
+
+  get lastPos() {
+    return this.start_pos + this.length - 1;
+  }
 }
