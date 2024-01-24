@@ -30,6 +30,10 @@ type ViterbiNodeType = "BOS" | "EOS" | "KOWN" | "UNKNOWN";
  * @constructor
  */
 export default class ViterbiNode {
+  static createBeginOfStatement(): ViterbiNode {
+    return new ViterbiNode(-1, 0, 0, 0, "BOS", 0, 0, "");
+  }
+
   name: number;
 
   cost: number;

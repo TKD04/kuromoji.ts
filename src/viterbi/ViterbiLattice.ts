@@ -22,9 +22,7 @@ import ViterbiNode from "./ViterbiNode";
  * @constructor
  */
 export default class ViterbiLattice {
-  nodes_end_at: ViterbiNode[][] = [
-    [new ViterbiNode(-1, 0, 0, 0, "BOS", 0, 0, "")],
-  ];
+  nodes_end_at: ViterbiNode[][] = [[ViterbiNode.createBeginOfStatement()]];
 
   eos_pos: number = 1;
 
