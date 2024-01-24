@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-type ViterbiNodeType = "BOS" | "EOS" | "KOWN" | "UNKNOWN";
+import type { ViterbiNodeType } from "./ViterbiNodeType";
 
 /**
  * ViterbiNode is a node of ViterbiLattice
