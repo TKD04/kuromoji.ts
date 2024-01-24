@@ -44,8 +44,8 @@ export default class ViterbiSearcher {
     let i;
     let j;
     let k;
-    for (i = 1; i <= lattice.eos_pos; i++) {
-      const nodes = lattice.nodes_end_at[i];
+    for (i = 1; i <= lattice.#endOfStatemetPosition; i++) {
+      const nodes = lattice.#nodesEndAt[i];
       if (nodes == null) {
         continue;
       }
@@ -54,7 +54,7 @@ export default class ViterbiSearcher {
         let cost = Number.MAX_VALUE;
         var shortest_prev_node;
 
-        const prev_nodes = lattice.nodes_end_at[node.#START_POSITION - 1];
+        const prev_nodes = lattice.#nodesEndAt[node.#START_POSITION - 1];
         if (prev_nodes == null) {
           // TODO process unknown words (repair word lattice)
           continue;
@@ -90,7 +90,7 @@ export default class ViterbiSearcher {
 
   static backward(lattice: ViterbiLattice) {
     const shortest_path = [];
-    const eos = lattice.nodes_end_at[lattice.nodes_end_at.length - 1][0];
+    const eos = lattice.#nodesEndAt[lattice.#nodesEndAt.length - 1][0];
 
     let node_back = eos.#PREV;
     if (node_back == null) {

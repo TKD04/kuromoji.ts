@@ -19,40 +19,43 @@ import ViterbiNode from "./ViterbiNode";
 
 /**
  * ViterbiLattice is a lattice in Viterbi algorithm
- * @constructor
  */
 export default class ViterbiLattice {
-  nodes_end_at: ViterbiNode[][] = [[ViterbiNode.createBeginOfStatement()]];
+  readonly #NODES_END_AT: ViterbiNode[][] = [
+    [ViterbiNode.createBeginOfStatement()],
+  ];
 
-  eos_pos: number = 1;
+  #endOfStatemetPosition: number = 1;
+
+  get nodesEndAt() {
+    return this.#NODES_END_AT.slice();
+  }
+
+  get endOfStatementPosition() {
+    return this.#endOfStatemetPosition;
+  }
 
   /**
    * Append node to ViterbiLattice
-   * @param {ViterbiNode} node
    */
-  static append(node: ViterbiNode) {
-    const last_pos = node.lastPosition();
-    if (this.eos_pos < last_pos) {
-      this.eos_pos = last_pos;
-    }
+  append(node: ViterbiNode): void {
+    const lastPosition = node.lastPosition();
+    const prevNodes = this.#NODES_END_AT[lastPosition] ?? [];
 
-    let prev_nodes = this.nodes_end_at[last_pos];
-    if (prev_nodes == null) {
-      prev_nodes = [];
+    if (this.#endOfStatemetPosition < lastPosition) {
+      this.#endOfStatemetPosition = lastPosition;
     }
-    prev_nodes.push(node);
-
-    this.nodes_end_at[last_pos] = prev_nodes;
+    prevNodes.push(node);
+    this.#NODES_END_AT[lastPosition] = prevNodes;
   }
 
   /**
    * Set ends with EOS (End of Statement)
    */
-  static appendEos() {
-    const last_index = this.nodes_end_at.length;
-    this.eos_pos++;
-    this.nodes_end_at[last_index] = [
-      ViterbiNode.createEndOfStatement(this.eos_pos),
+  appendEos(): void {
+    this.#endOfStatemetPosition += 1;
+    this.#NODES_END_AT[this.#NODES_END_AT.length] = [
+      ViterbiNode.createEndOfStatement(this.#endOfStatemetPosition),
     ];
   }
 }
