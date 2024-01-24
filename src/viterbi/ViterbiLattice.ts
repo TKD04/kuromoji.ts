@@ -52,7 +52,7 @@ export default class ViterbiLattice {
     const last_index = this.nodes_end_at.length;
     this.eos_pos++;
     this.nodes_end_at[last_index] = [
-      new ViterbiNode(-1, 0, this.eos_pos, 0, "EOS", 0, 0, ""),
+      ViterbiNode.createEndOfStatement(this.eos_pos),
     ];
   }
 }

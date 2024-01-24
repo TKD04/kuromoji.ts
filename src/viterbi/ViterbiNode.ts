@@ -34,6 +34,10 @@ export default class ViterbiNode {
     return new ViterbiNode(-1, 0, 0, 0, "BOS", 0, 0, "");
   }
 
+  static createEndOfStatement(startPos: number): ViterbiNode {
+    return new ViterbiNode(-1, 0, startPos, 0, "EOS", 0, 0, "");
+  }
+
   name: number;
 
   cost: number;
