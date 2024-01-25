@@ -127,4 +127,8 @@ export default class ViterbiNode {
   hasLeftId(): boolean {
     return typeof this.#LEFT_ID !== "undefined";
   }
+
+  hasRightId(): boolean {
+    return typeof this.#RIGHT_ID !== "undefined";
+  }
 }

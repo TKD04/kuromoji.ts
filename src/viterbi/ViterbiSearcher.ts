@@ -62,7 +62,7 @@ export default class ViterbiSearcher {
         prevNodes.forEach((prevNode) => {
           let edgeCost: number;
 
-          if (!node.hasLeftId() || typeof prevNode.rightId === "undefined") {
+          if (!node.hasLeftId() || !prevNode.hasRightId()) {
             // TODO assert
             console.log("Left or right is null");
             edgeCost = 0;
