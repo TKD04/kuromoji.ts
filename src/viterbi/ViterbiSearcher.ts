@@ -44,8 +44,7 @@ export default class ViterbiSearcher {
   }
 
   forward(lattice: ViterbiLattice) {
-    let i;
-    for (i = 1; i <= lattice.endOfStatementPosition; i += 1) {
+    for (let i = 1; i <= lattice.endOfStatementPosition; i += 1) {
       const nodes = lattice.nodesEndAt[i];
       if (typeof nodes === "undefined") {
         continue;
