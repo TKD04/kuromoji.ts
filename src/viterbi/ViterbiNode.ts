@@ -123,4 +123,8 @@ export default class ViterbiNode {
   lastPosition(): number {
     return this.#START_POSITION + this.#LENGTH - 1;
   }
+
+  hasLeftId(): boolean {
+    return typeof this.#LEFT_ID !== "undefined";
+  }
 }
