@@ -17,83 +17,103 @@
 
 /**
  * String wrapper for UTF-16 surrogate pair (4 bytes)
- * @param {string} str String to wrap
- * @constructor
  */
 export default class SurrogateAwareString {
-  str: string;
+  static isSurrogatePair(char: string) {
+    const utf16Code = char.charCodeAt(0);
 
-  index_mapping: number[];
+    return utf16Code >= 0xd800 && utf16Code <= 0xdbff;
+  }
 
+  readonly #str: string;
+
+  readonly #indexMapping: number[];
+
+  readonly #length: number;
+
+  /**
+   * @param str String to wrap
+   */
   constructor(str: string) {
-    this.str = str;
-    this.index_mapping = [];
+    this.#str = str;
+    this.#indexMapping = [];
 
-    for (let pos = 0; pos < str.length; pos++) {
-      const ch = str.charAt(pos);
-      this.index_mapping.push(pos);
-      if (SurrogateAwareString.isSurrogatePair(ch)) {
-        pos++;
+    const strLen = str.length;
+    for (let pos = 0; pos < strLen; pos += 1) {
+      const char = str.charAt(pos);
+      this.#indexMapping.push(pos);
+      if (SurrogateAwareString.isSurrogatePair(char)) {
+        pos += 1;
       }
     }
     // Surrogate aware length
-    this.length = this.index_mapping.length;
+    this.#length = this.#indexMapping.length;
   }
 
-  static slice(index: number) {
-    if (this.index_mapping.length <= index) {
+  get indexMapping() {
+    return this.#indexMapping.slice();
+  }
+
+  get length() {
+    return this.#length;
+  }
+
+  charAt(index: number): string {
+    if (this.#str.length <= index) {
       return "";
     }
-    const surrogate_aware_index = this.index_mapping[index];
-    return this.str.slice(surrogate_aware_index);
+    const surrogateAwareStartIndex = this.#indexMapping[index];
+    const surrogateAwareEndIndex = this.#indexMapping[index + 1];
+
+    if (typeof surrogateAwareStartIndex === "undefined") {
+      throw new Error("surrogateAwareStartIndex must not be undefined");
+    }
+    if (typeof surrogateAwareEndIndex === "undefined") {
+      return this.#str.slice(surrogateAwareStartIndex);
+    }
+
+    return this.#str.slice(surrogateAwareStartIndex, surrogateAwareEndIndex);
   }
 
-  static charAt(index: number) {
-    if (this.str.length <= index) {
-      return "";
-    }
-    const surrogate_aware_start_index = this.index_mapping[index];
-    const surrogate_aware_end_index = this.index_mapping[index + 1];
-
-    if (surrogate_aware_end_index == null) {
-      return this.str.slice(surrogate_aware_start_index);
-    }
-    return this.str.slice(
-      surrogate_aware_start_index,
-      surrogate_aware_end_index
-    );
-  }
-
-  static charCodeAt(index: number) {
-    if (this.index_mapping.length <= index) {
+  charCodeAt(index: number): number {
+    if (this.#indexMapping.length <= index) {
       return NaN;
     }
-    const surrogate_aware_index = this.index_mapping[index];
-    const upper = this.str.charCodeAt(surrogate_aware_index);
+    const surrogateAwareIndex = this.#indexMapping[index];
+    if (typeof surrogateAwareIndex === "undefined") {
+      throw new Error("surrogateAwareIndex must not be undefined");
+    }
+    const upper = this.#str.charCodeAt(surrogateAwareIndex);
     let lower;
+
     if (
       upper >= 0xd800 &&
       upper <= 0xdbff &&
-      surrogate_aware_index < this.str.length
+      surrogateAwareIndex < this.#str.length
     ) {
-      lower = this.str.charCodeAt(surrogate_aware_index + 1);
+      lower = this.#str.charCodeAt(surrogateAwareIndex + 1);
       if (lower >= 0xdc00 && lower <= 0xdfff) {
         return (upper - 0xd800) * 0x400 + lower - 0xdc00 + 0x10000;
       }
     }
+
     return upper;
   }
 
-  static toString() {
-    return this.str;
+  toString(): string {
+    return this.#str;
   }
 
-  isSurrogatePair(ch: string) {
-    const utf16_code = ch.charCodeAt(0);
-    if (utf16_code >= 0xd800 && utf16_code <= 0xdbff) {
-      // surrogate pair
-      return true;
+  slice(index: number): string {
+    if (this.#indexMapping.length <= index) {
+      return "";
     }
-    return false;
+    const surrogateAwareIndex = this.#indexMapping[index];
+
+    if (typeof surrogateAwareIndex === "undefined") {
+      throw new Error("surrogateAwareIndex must not be undefined");
+    }
+
+    return this.#str.slice(surrogateAwareIndex);
   }
 }
