@@ -90,7 +90,7 @@ export default class ViterbiSearcher {
 
   static backward(lattice: ViterbiLattice) {
     const shortest_path = [];
-    const eos = lattice.#nodesEndAt[lattice.#nodesEndAt.length - 1][0];
+    const eos = lattice.getLastNode();
 
     let node_back = eos.#PREV;
     if (node_back == null) {

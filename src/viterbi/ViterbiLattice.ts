@@ -35,6 +35,20 @@ export default class ViterbiLattice {
     return this.#endOfStatemetPosition;
   }
 
+  getLastNode(): ViterbiNode {
+    const lastNodes = this.#NODES_END_AT.at(-1);
+
+    if (typeof lastNodes === "undefined") {
+      throw new Error("lastNodes must not be undefined");
+    }
+    const lastNode = lastNodes[0];
+    if (typeof lastNode === "undefined") {
+      throw new Error("lastNode must not be undefined");
+    }
+
+    return lastNode;
+  }
+
   /**
    * Append node to ViterbiLattice
    */
