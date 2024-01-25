@@ -41,9 +41,9 @@ export default class ViterbiNode {
 
   readonly #TYPE: ViterbiNodeType;
 
-  readonly #LEFT_ID: number;
+  readonly #LEFT_ID: number | undefined;
 
-  readonly #RIGHT_ID: number;
+  readonly #RIGHT_ID: number | undefined;
 
   readonly #PREV: ViterbiNode | undefined = undefined;
 
@@ -65,8 +65,8 @@ export default class ViterbiNode {
     startPosition: number,
     length: number,
     type: ViterbiNodeType,
-    leftId: number,
-    rightId: number,
+    leftId: number | undefined,
+    rightId: number | undefined,
     surfaceForm: string
   ) {
     this.#NAME = name;

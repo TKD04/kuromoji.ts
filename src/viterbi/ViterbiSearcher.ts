@@ -17,94 +17,95 @@
 
 import type ConnectionCosts from "../dict/ConnectionCosts";
 import type ViterbiLattice from "./ViterbiLattice";
+import type ViterbiNode from "./ViterbiNode";
 
 /**
  * ViterbiSearcher is for searching best Viterbi path
- * @param {ConnectionCosts} connection_costs Connection costs matrix
- * @constructor
  */
 export default class ViterbiSearcher {
-  connection_costs: ConnectionCosts;
+  readonly #CONNECTION_COSTS: ConnectionCosts;
 
-  constructor(connection_costs: ConnectionCosts) {
-    this.connection_costs = connection_costs;
+  /**
+   * @param connectionCosts Connection costs matrix
+   */
+  constructor(connectionCosts: ConnectionCosts) {
+    this.#CONNECTION_COSTS = connectionCosts;
   }
 
   /**
    * Search best path by forward-backward algorithm
-   * @param {ViterbiLattice} lattice Viterbi lattice to search
-   * @returns {Array} Shortest path
+   * @param lattice Viterbi lattice to search
+   * @returns Shortest path
    */
-  static search(lattice: ViterbiLattice) {
-    lattice = this.forward(lattice);
-    return this.backward(lattice);
+  search(lattice: ViterbiLattice): ViterbiNode[] {
+    const temp = this.forward(lattice);
+
+    return this.backward(temp);
   }
 
-  static forward(lattice: ViterbiLattice) {
+  forward(lattice: ViterbiLattice) {
     let i;
-    let j;
-    let k;
-    for (i = 1; i <= lattice.#endOfStatemetPosition; i++) {
-      const nodes = lattice.#nodesEndAt[i];
-      if (nodes == null) {
+    for (i = 1; i <= lattice.endOfStatementPosition; i += 1) {
+      const nodes = lattice.nodesEndAt[i];
+      if (typeof nodes === "undefined") {
         continue;
       }
-      for (j = 0; j < nodes.length; j++) {
-        const node = nodes[j];
+      nodes.forEach((node) => {
+        const prevNodes = lattice.nodesEndAt[node.startPosition - 1];
         let cost = Number.MAX_VALUE;
-        var shortest_prev_node;
+        let shortestPrevNode;
 
-        const prev_nodes = lattice.#nodesEndAt[node.#START_POSITION - 1];
-        if (prev_nodes == null) {
+        if (typeof prevNodes === "undefined") {
           // TODO process unknown words (repair word lattice)
-          continue;
+          return;
         }
-        for (k = 0; k < prev_nodes.length; k++) {
-          const prev_node = prev_nodes[k];
+        prevNodes.forEach((prevNode) => {
+          let edgeCost: number;
 
-          var edge_cost;
-          if (node.#LEFT_ID == null || prev_node.#RIGHT_ID == null) {
+          if (
+            typeof node.leftId === "undefined" ||
+            typeof prevNode.rightId === "undefined"
+          ) {
             // TODO assert
             console.log("Left or right is null");
-            edge_cost = 0;
+            edgeCost = 0;
           } else {
-            edge_cost = this.connection_costs.get(
-              prev_node.#RIGHT_ID,
-              node.#LEFT_ID
+            edgeCost = this.#CONNECTION_COSTS.get(
+              prevNode.rightId,
+              node.leftId
             );
           }
-
-          const _cost = prev_node.shortest_cost + edge_cost + node.#COST;
-          if (_cost < cost) {
-            shortest_prev_node = prev_node;
-            cost = _cost;
+          const curCost = prevNode.shortestCost + edgeCost + node.cost;
+          if (curCost < cost) {
+            shortestPrevNode = prevNode;
+            cost = curCost;
           }
-        }
+        });
 
-        node.#PREV = shortest_prev_node;
-        node.shortest_cost = cost;
-      }
+        node.prev = shortestPrevNode;
+        node.shortestCost = cost;
+      });
     }
     return lattice;
   }
 
-  static backward(lattice: ViterbiLattice) {
-    const shortest_path = [];
-    const eos = lattice.getLastNode();
+  backward(lattice: ViterbiLattice): ViterbiNode[] {
+    const shortestPath: ViterbiNode[] = [];
+    const endOfStatement = lattice.getLastNode();
 
-    let node_back = eos.#PREV;
-    if (node_back == null) {
+    let nodeBack = endOfStatement.prev;
+    if (typeof nodeBack === "undefined") {
       return [];
     }
-    while (node_back.#TYPE !== "BOS") {
-      shortest_path.push(node_back);
-      if (node_back.#PREV == null) {
+    while (nodeBack.type !== "BOS") {
+      shortestPath.push(nodeBack);
+      if (typeof nodeBack.prev === "undefined") {
         // TODO Failed to back. Process unknown words?
         return [];
       }
-      node_back = node_back.#PREV;
+      nodeBack = nodeBack?.prev;
     }
 
-    return shortest_path.reverse();
+    return shortestPath.reverse();
   }
 }
