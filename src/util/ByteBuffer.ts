@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+import isLowSurrogates from "./isLowSurrogates";
+
 /**
  * Convert String (UTF-16) to UTF-8 ArrayBuffer
  *
@@ -37,7 +39,7 @@ const stringToUtf8Bytes = (str) => {
       const upper = utf16_code; // high surrogate
       const lower = str.charCodeAt(i++); // low surrogate
 
-      if (lower >= 0xdc00 && lower <= 0xdfff) {
+      if (isLowSurrogates(lower)) {
         unicode_code =
           (upper - 0xd800) * (1 << 10) + (1 << 16) + (lower - 0xdc00);
       } else {
