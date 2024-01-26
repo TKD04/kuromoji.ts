@@ -15,16 +15,12 @@
  * limitations under the License.
  */
 
+import isSurrogatePair from "./isSurrogatePair";
+
 /**
  * String wrapper for UTF-16 surrogate pair (4 bytes)
  */
 export default class SurrogateAwareString {
-  static isSurrogatePair(char: string) {
-    const utf16Code = char.charCodeAt(0);
-
-    return utf16Code >= 0xd800 && utf16Code <= 0xdbff;
-  }
-
   readonly #str: string;
 
   readonly #indexMapping: number[];
@@ -42,7 +38,7 @@ export default class SurrogateAwareString {
     for (let pos = 0; pos < strLen; pos += 1) {
       const char = str.charAt(pos);
       this.#indexMapping.push(pos);
-      if (SurrogateAwareString.isSurrogatePair(char)) {
+      if (isSurrogatePair(char)) {
         pos += 1;
       }
     }

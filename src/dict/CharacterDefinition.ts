@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import SurrogateAwareString from "../util/SurrogateAwareString";
+import isSurrogatePair from "../util/isSurrogatePair";
 import CharacterClass from "./CharacterClass";
 import InvokeDefinitionMap from "./InvokeDefinitionMap";
 
@@ -183,7 +183,7 @@ export default class {
     const classes = [];
 
     /*
-     if (SurrogateAwareString.isSurrogatePair(ch)) {
+     if (isSurrogatePair(ch)) {
      // Surrogate pair character codes can not be defined by char.def
      return classes;
      } */
@@ -220,7 +220,7 @@ export default class {
     let class_id;
 
     const code = ch.charCodeAt(0);
-    if (SurrogateAwareString.isSurrogatePair(ch)) {
+    if (isSurrogatePair(ch)) {
       // Surrogate pair character codes can not be defined by char.def, so set DEFAULT category
       class_id = this.invoke_definition_map.lookup(DEFAULT_CATEGORY);
     } else if (code < this.character_category_map.length) {
