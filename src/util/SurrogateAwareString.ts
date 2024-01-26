@@ -101,7 +101,7 @@ export default class SurrogateAwareString {
   }
 
   slice(index: number): string {
-    if (this.#INDEX_MAPPING.length <= index) {
+    if (this.#LENGTH <= index) {
       return "";
     }
     const surrogateAwareIndex = this.#INDEX_MAPPING[index];
