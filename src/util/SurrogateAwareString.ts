@@ -21,73 +21,73 @@ import isSurrogatePair from "./isSurrogatePair";
  * String wrapper for UTF-16 surrogate pair (4 bytes)
  */
 export default class SurrogateAwareString {
-  readonly #str: string;
+  readonly #STR: string;
 
-  readonly #indexMapping: number[];
+  readonly #INDEX_MAPPING: number[];
 
-  readonly #length: number;
+  readonly #LENGTH: number;
 
   /**
    * @param str String to wrap
    */
   constructor(str: string) {
-    this.#str = str;
-    this.#indexMapping = [];
+    this.#STR = str;
+    this.#INDEX_MAPPING = [];
 
     const strLen = str.length;
     for (let pos = 0; pos < strLen; pos += 1) {
       const char = str.charAt(pos);
-      this.#indexMapping.push(pos);
+      this.#INDEX_MAPPING.push(pos);
       if (isSurrogatePair(char)) {
         pos += 1;
       }
     }
     // Surrogate aware length
-    this.#length = this.#indexMapping.length;
+    this.#LENGTH = this.#INDEX_MAPPING.length;
   }
 
   get indexMapping() {
-    return this.#indexMapping.slice();
+    return this.#INDEX_MAPPING.slice();
   }
 
   get length() {
-    return this.#length;
+    return this.#LENGTH;
   }
 
   charAt(index: number): string {
-    if (this.#str.length <= index) {
+    if (this.#STR.length <= index) {
       return "";
     }
-    const surrogateAwareStartIndex = this.#indexMapping[index];
-    const surrogateAwareEndIndex = this.#indexMapping[index + 1];
+    const surrogateAwareStartIndex = this.#INDEX_MAPPING[index];
+    const surrogateAwareEndIndex = this.#INDEX_MAPPING[index + 1];
 
     if (typeof surrogateAwareStartIndex === "undefined") {
       throw new Error("surrogateAwareStartIndex must not be undefined");
     }
     if (typeof surrogateAwareEndIndex === "undefined") {
-      return this.#str.slice(surrogateAwareStartIndex);
+      return this.#STR.slice(surrogateAwareStartIndex);
     }
 
-    return this.#str.slice(surrogateAwareStartIndex, surrogateAwareEndIndex);
+    return this.#STR.slice(surrogateAwareStartIndex, surrogateAwareEndIndex);
   }
 
   charCodeAt(index: number): number {
-    if (this.#indexMapping.length <= index) {
+    if (this.#INDEX_MAPPING.length <= index) {
       return NaN;
     }
-    const surrogateAwareIndex = this.#indexMapping[index];
+    const surrogateAwareIndex = this.#INDEX_MAPPING[index];
     if (typeof surrogateAwareIndex === "undefined") {
       throw new Error("surrogateAwareIndex must not be undefined");
     }
-    const upper = this.#str.charCodeAt(surrogateAwareIndex);
+    const upper = this.#STR.charCodeAt(surrogateAwareIndex);
     let lower;
 
     if (
       upper >= 0xd800 &&
       upper <= 0xdbff &&
-      surrogateAwareIndex < this.#str.length
+      surrogateAwareIndex < this.#STR.length
     ) {
-      lower = this.#str.charCodeAt(surrogateAwareIndex + 1);
+      lower = this.#STR.charCodeAt(surrogateAwareIndex + 1);
       if (lower >= 0xdc00 && lower <= 0xdfff) {
         return (upper - 0xd800) * 0x400 + lower - 0xdc00 + 0x10000;
       }
@@ -97,19 +97,19 @@ export default class SurrogateAwareString {
   }
 
   toString(): string {
-    return this.#str;
+    return this.#STR;
   }
 
   slice(index: number): string {
-    if (this.#indexMapping.length <= index) {
+    if (this.#INDEX_MAPPING.length <= index) {
       return "";
     }
-    const surrogateAwareIndex = this.#indexMapping[index];
+    const surrogateAwareIndex = this.#INDEX_MAPPING[index];
 
     if (typeof surrogateAwareIndex === "undefined") {
       throw new Error("surrogateAwareIndex must not be undefined");
     }
 
-    return this.#str.slice(surrogateAwareIndex);
+    return this.#STR.slice(surrogateAwareIndex);
   }
 }
