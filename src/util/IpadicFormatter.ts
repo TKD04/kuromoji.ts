@@ -15,58 +15,84 @@
  * limitations under the License.
  */
 
+import type {
+  IpadicFeatures,
+  IpadicKnownEntryToken,
+  IpadicUnknownEntryToken,
+  IpadicWordType,
+} from "./Ipadic";
+
 /**
  * Mappings between IPADIC dictionary features and tokenized results
- * @constructor
  */
 export default class IpadicFormatter {
-  static formatEntry(
-    word_id: number,
-    position: number,
-    type: string,
-    features: any[]
+  static formatKnownEntry(
+    wordId: number,
+    wordType: IpadicWordType,
+    wordPosition: number,
+    features: IpadicFeatures
   ) {
-    const token = {};
-    token.word_id = word_id;
-    token.word_type = type;
-    token.word_position = position;
-
-    token.surface_form = features[0];
-    token.pos = features[1];
-    token.pos_detail_1 = features[2];
-    token.pos_detail_2 = features[3];
-    token.pos_detail_3 = features[4];
-    token.conjugated_type = features[5];
-    token.conjugated_form = features[6];
-    token.basic_form = features[7];
-    token.reading = features[8];
-    token.pronunciation = features[9];
+    const [
+      surfaceForm,
+      partOfSpeech,
+      partOfSpeechSubdivision1,
+      partOfSpeechSubdivision2,
+      partOfSpeechSubdivision3,
+      conjugatedType,
+      conjugatedForm,
+      basicForm,
+      howToRead,
+      pronunciation,
+    ] = features;
+    const token: IpadicKnownEntryToken = {
+      wordId,
+      wordType,
+      wordPosition,
+      surfaceForm,
+      partOfSpeech,
+      partOfSpeechSubdivision1,
+      partOfSpeechSubdivision2,
+      partOfSpeechSubdivision3,
+      conjugatedType,
+      conjugatedForm,
+      basicForm,
+      howToRead,
+      pronunciation,
+    } as const;
 
     return token;
   }
 
   static formatUnknownEntry(
-    word_id: number,
-    position: number,
-    type: string,
-    features: any[],
-    surface_form: string
-  ) {
-    const token = {};
-    token.word_id = word_id;
-    token.word_type = type;
-    token.word_position = position;
-
-    token.surface_form = surface_form;
-    token.pos = features[1];
-    token.pos_detail_1 = features[2];
-    token.pos_detail_2 = features[3];
-    token.pos_detail_3 = features[4];
-    token.conjugated_type = features[5];
-    token.conjugated_form = features[6];
-    token.basic_form = features[7];
-    // token.reading = features[8];
-    // token.pronunciation = features[9];
+    wordId: number,
+    wordType: IpadicWordType,
+    wordPosition: number,
+    features: IpadicFeatures,
+    surfaceForm: string
+  ): IpadicUnknownEntryToken {
+    const [
+      ,
+      partOfSpeech,
+      partOfSpeechSubdivision1,
+      partOfSpeechSubdivision2,
+      partOfSpeechSubdivision3,
+      conjugatedType,
+      conjugatedForm,
+      basicForm,
+    ] = features;
+    const token: IpadicUnknownEntryToken = {
+      wordId,
+      wordType,
+      wordPosition,
+      surfaceForm,
+      partOfSpeech,
+      partOfSpeechSubdivision1,
+      partOfSpeechSubdivision2,
+      partOfSpeechSubdivision3,
+      conjugatedType,
+      conjugatedForm,
+      basicForm,
+    } as const;
 
     return token;
   }

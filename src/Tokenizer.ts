@@ -32,7 +32,7 @@ export default class Tokenizer {
     this.unknown_dictionary = dic.unknown_dictionary;
     this.viterbi_builder = new ViterbiBuilder(dic);
     this.viterbi_searcher = new ViterbiSearcher(dic.connection_costs);
-    this.formatter = new IpadicFormatter(); // TODO Other dictionaries
+    // TODO Other dictionaries
   }
 
   /**
@@ -97,7 +97,7 @@ export default class Tokenizer {
         } else {
           features = features_line.split(",");
         }
-        token = this.formatter.formatEntry(
+        token = IpadicFormatter.formatKnownEntry(
           node.name,
           last_pos + node.start_pos,
           node.type,
@@ -111,7 +111,7 @@ export default class Tokenizer {
         } else {
           features = features_line.split(",");
         }
-        token = this.formatter.formatUnknownEntry(
+        token = IpadicFormatter.formatUnknownEntry(
           node.name,
           last_pos + node.start_pos,
           node.type,
@@ -120,7 +120,7 @@ export default class Tokenizer {
         );
       } else {
         // TODO User dictionary
-        token = this.formatter.formatEntry(
+        token = IpadicFormatter.formatKnownEntry(
           node.name,
           last_pos + node.start_pos,
           node.type,
