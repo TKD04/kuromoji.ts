@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 /*
  * Copyright 2014 Takuya Asano
  * Copyright 2010-2014 Atilika Inc. and contributors
@@ -16,59 +17,71 @@
  */
 
 import isLowSurrogates from "./isLowSurrogates";
+import isSurrogatePair from "./isSurrogatePair";
 
 /**
  * Convert String (UTF-16) to UTF-8 ArrayBuffer
- *
- * @param {String} str UTF-16 string to convert
- * @return {Uint8Array} Byte sequence encoded by UTF-8
+ * @param str UTF-16 string to convert
+ * @return Byte sequence encoded by UTF-8
  */
-const stringToUtf8Bytes = (str) => {
+const stringToUtf8Bytes = (str: string): Uint8Array | null => {
   // Max size of 1 character is 4 bytes
   const bytes = new Uint8Array(str.length * 4);
-
+  const strLen = str.length;
   let i = 0;
   let j = 0;
 
-  while (i < str.length) {
-    var unicode_code;
+  while (i < strLen) {
+    const utf16Code = str.charCodeAt(i);
+    let unicodeCode: number;
 
-    const utf16_code = str.charCodeAt(i++);
-    if (utf16_code >= 0xd800 && utf16_code <= 0xdbff) {
-      // surrogate pair
-      const upper = utf16_code; // high surrogate
-      const lower = str.charCodeAt(i++); // low surrogate
+    i += 1;
+    if (isSurrogatePair(utf16Code)) {
+      const highSurrogates = utf16Code;
+      const lowSurrogates = str.charCodeAt(i);
 
-      if (isLowSurrogates(lower)) {
-        unicode_code =
-          (upper - 0xd800) * (1 << 10) + (1 << 16) + (lower - 0xdc00);
+      i += 1;
+      if (isLowSurrogates(lowSurrogates)) {
+        unicodeCode =
+          (highSurrogates - 0xd800) * (1 << 10) +
+          (1 << 16) +
+          (lowSurrogates - 0xdc00);
       } else {
         // malformed surrogate pair
         return null;
       }
     } else {
-      // not surrogate code
-      unicode_code = utf16_code;
+      unicodeCode = utf16Code;
     }
 
-    if (unicode_code < 0x80) {
+    if (unicodeCode < 0x80) {
       // 1-byte
-      bytes[j++] = unicode_code;
-    } else if (unicode_code < 1 << 11) {
+      bytes[j] = unicodeCode;
+      j += 1;
+    } else if (unicodeCode < 1 << 11) {
       // 2-byte
-      bytes[j++] = (unicode_code >>> 6) | 0xc0;
-      bytes[j++] = (unicode_code & 0x3f) | 0x80;
-    } else if (unicode_code < 1 << 16) {
+      bytes[j] = (unicodeCode >>> 6) | 0xc0;
+      j += 1;
+      bytes[j] = (unicodeCode & 0x3f) | 0x80;
+      j += 1;
+    } else if (unicodeCode < 1 << 16) {
       // 3-byte
-      bytes[j++] = (unicode_code >>> 12) | 0xe0;
-      bytes[j++] = ((unicode_code >> 6) & 0x3f) | 0x80;
-      bytes[j++] = (unicode_code & 0x3f) | 0x80;
-    } else if (unicode_code < 1 << 21) {
+      bytes[j] = (unicodeCode >>> 12) | 0xe0;
+      j += 1;
+      bytes[j] = ((unicodeCode >> 6) & 0x3f) | 0x80;
+      j += 1;
+      bytes[j] = (unicodeCode & 0x3f) | 0x80;
+      j += 1;
+    } else if (unicodeCode < 1 << 21) {
       // 4-byte
-      bytes[j++] = (unicode_code >>> 18) | 0xf0;
-      bytes[j++] = ((unicode_code >> 12) & 0x3f) | 0x80;
-      bytes[j++] = ((unicode_code >> 6) & 0x3f) | 0x80;
-      bytes[j++] = (unicode_code & 0x3f) | 0x80;
+      bytes[j] = (unicodeCode >>> 18) | 0xf0;
+      j += 1;
+      bytes[j] = ((unicodeCode >> 12) & 0x3f) | 0x80;
+      j += 1;
+      bytes[j] = ((unicodeCode >> 6) & 0x3f) | 0x80;
+      j += 1;
+      bytes[j] = (unicodeCode & 0x3f) | 0x80;
+      j += 1;
     } else {
       // malformed UCS4 code
     }
@@ -79,11 +92,10 @@ const stringToUtf8Bytes = (str) => {
 
 /**
  * Convert UTF-8 ArrayBuffer to String (UTF-16)
- *
- * @param {Array} bytes UTF-8 byte sequence to convert
- * @return {String} String encoded by UTF-16
+ * @param bytes UTF-8 byte sequence to convert
+ * @return String encoded by UTF-16
  */
-const utf8BytesToString = (bytes) => {
+const utf8BytesToString = (bytes: Uint8Array): string => {
   let str = "";
   let code;
   let b1;
@@ -95,25 +107,53 @@ const utf8BytesToString = (bytes) => {
   let i = 0;
 
   while (i < bytes.length) {
-    b1 = bytes[i++];
+    b1 = bytes[i];
+    if (typeof b1 === "undefined") {
+      throw new Error("b1 must not be undefined");
+    }
+    i += 1;
 
     if (b1 < 0x80) {
       // 1 byte
       code = b1;
     } else if (b1 >> 5 === 0x06) {
       // 2 bytes
-      b2 = bytes[i++];
+      b2 = bytes[i];
+      if (typeof b2 === "undefined") {
+        throw new Error("b2 must not be undefined");
+      }
+      i += 1;
       code = ((b1 & 0x1f) << 6) | (b2 & 0x3f);
     } else if (b1 >> 4 === 0x0e) {
       // 3 bytes
-      b2 = bytes[i++];
-      b3 = bytes[i++];
+      b2 = bytes[i];
+      if (typeof b2 === "undefined") {
+        throw new Error("b2 must not be undefined");
+      }
+      i += 1;
+      b3 = bytes[i];
+      if (typeof b3 === "undefined") {
+        throw new Error("b3 must not be undefined");
+      }
+      i += 1;
       code = ((b1 & 0x0f) << 12) | ((b2 & 0x3f) << 6) | (b3 & 0x3f);
     } else {
       // 4 bytes
-      b2 = bytes[i++];
-      b3 = bytes[i++];
-      b4 = bytes[i++];
+      b2 = bytes[i];
+      if (typeof b2 === "undefined") {
+        throw new Error("b2 must not be undefined");
+      }
+      i += 1;
+      b3 = bytes[i];
+      if (typeof b3 === "undefined") {
+        throw new Error("b3 must not be undefined");
+      }
+      i += 1;
+      b4 = bytes[i];
+      if (typeof b4 === "undefined") {
+        throw new Error("b4 must not be undefined");
+      }
+      i += 1;
       code =
         ((b1 & 0x07) << 18) |
         ((b2 & 0x3f) << 12) |
@@ -137,99 +177,119 @@ const utf8BytesToString = (bytes) => {
 
 /**
  * Utilities to manipulate byte sequence
- * @param {(number|Uint8Array)} arg Initial size of this buffer (number), or buffer to set (Uint8Array)
- * @constructor
  */
 export default class ByteBuffer {
   buffer: Uint8Array;
 
   position: number;
 
+  /**
+   * @param arg Initial size of this buffer (number), or buffer to set (Uint8Array)
+   */
   constructor(arg: null | number | Uint8Array) {
-    let initial_size;
-    if (arg == null) {
-      initial_size = 1024 * 1024;
+    let initialSize;
+
+    if (arg === null) {
+      initialSize = 1024 * 1024;
     } else if (typeof arg === "number") {
-      initial_size = arg;
+      initialSize = arg;
     } else if (arg instanceof Uint8Array) {
       this.buffer = arg;
       this.position = 0; // Overwrite
       return;
     } else {
       // typeof arg -> String
-      throw `${typeof arg} is invalid parameter type for ByteBuffer constructor`;
+      throw new Error(
+        `${typeof arg} is invalid parameter type for ByteBuffer constructor`
+      );
     }
     // arg is null or number
-    this.buffer = new Uint8Array(initial_size);
+    this.buffer = new Uint8Array(initialSize);
     this.position = 0;
   }
 
-  static size() {
+  size(): number {
     return this.buffer.length;
   }
 
-  static reallocate() {
-    const new_array = new Uint8Array(this.buffer.length * 2);
-    new_array.set(this.buffer);
-    this.buffer = new_array;
+  reallocate(): void {
+    const newArray = new Uint8Array(this.buffer.length * 2);
+
+    newArray.set(this.buffer);
+    this.buffer = newArray;
   }
 
-  static shrink() {
+  shrink(): Uint8Array {
     this.buffer = this.buffer.subarray(0, this.position);
+
     return this.buffer;
   }
 
-  static put(b: number) {
+  put(b: number): void {
     if (this.buffer.length < this.position + 1) {
       this.reallocate();
     }
-    this.buffer[this.position++] = b;
+    this.buffer[this.position] = b;
+    this.position += 1;
   }
 
-  static get(index: number) {
-    if (index == null) {
-      index = this.position;
+  get(index: number) {
+    let idx = this.position;
+    if (index !== null) {
+      idx = index;
+    } else {
       this.position += 1;
     }
-    if (this.buffer.length < index + 1) {
+    if (this.buffer.length < idx + 1) {
       return 0;
     }
-    return this.buffer[index];
+    return this.buffer[idx];
   }
 
   // Write short to buffer by little endian
-  static putShort(num: number) {
+  putShort(num: number): void {
     if (num > 0xffff) {
-      throw `${num} is over short value`;
+      throw new Error(`${num} is over short value`);
     }
     const lower = 0x00ff & num;
     const upper = (0xff00 & num) >> 8;
+
     this.put(lower);
     this.put(upper);
   }
 
   // Read short from buffer by little endian
-  static getShort(index: number) {
-    if (index == null) {
-      index = this.position;
+  getShort(index: number | null): number {
+    let idx = this.position;
+
+    if (index !== null) {
+      idx = index;
+    } else {
       this.position += 2;
     }
-    if (this.buffer.length < index + 2) {
+    if (this.buffer.length < idx + 2) {
       return 0;
     }
-    const lower = this.buffer[index];
-    const upper = this.buffer[index + 1];
+    const lower = this.buffer[idx];
+    const upper = this.buffer[idx + 1];
+    if (typeof lower === "undefined") {
+      throw new Error("lower must not be undefined");
+    }
+    if (typeof upper === "undefined") {
+      throw new Error("upper must not be undefined");
+    }
     let value = (upper << 8) + lower;
     if (value & 0x8000) {
       value = -((value - 1) ^ 0xffff);
     }
+
     return value;
   }
 
   // Write integer to buffer by little endian
-  static putInt(num: number) {
+  putInt(num: number): void {
     if (num > 0xffffffff) {
-      throw `${num} is over integer value`;
+      throw new Error(`${num} is over integer value`);
     }
     const b0 = 0x000000ff & num;
     const b1 = (0x0000ff00 & num) >> 8;
@@ -242,55 +302,85 @@ export default class ByteBuffer {
   }
 
   // Read integer from buffer by little endian
-  static getInt(index: number) {
-    if (index == null) {
-      index = this.position;
+  getInt(index: number): number {
+    let idx = this.position;
+
+    if (index !== null) {
+      idx = index;
+    } else {
       this.position += 4;
     }
-    if (this.buffer.length < index + 4) {
+    if (this.buffer.length < idx + 4) {
       return 0;
     }
-    const b0 = this.buffer[index];
-    const b1 = this.buffer[index + 1];
-    const b2 = this.buffer[index + 2];
-    const b3 = this.buffer[index + 3];
+    const b0 = this.buffer[idx];
+    const b1 = this.buffer[idx + 1];
+    const b2 = this.buffer[idx + 2];
+    const b3 = this.buffer[idx + 3];
+    if (typeof b0 === "undefined") {
+      throw new Error("b0 must not be undefined");
+    }
+    if (typeof b1 === "undefined") {
+      throw new Error("b1 must not be undefined");
+    }
+    if (typeof b2 === "undefined") {
+      throw new Error("b2 must not be undefined");
+    }
+    if (typeof b3 === "undefined") {
+      throw new Error("b3 must not be undefined");
+    }
 
     return (b3 << 24) + (b2 << 16) + (b1 << 8) + b0;
   }
 
-  static readInt() {
+  readInt(): number {
     const pos = this.position;
+
     this.position += 4;
+
     return this.getInt(pos);
   }
 
-  static putString(str: string) {
+  putString(str: string): void {
     const bytes = stringToUtf8Bytes(str);
-    for (let i = 0; i < bytes.length; i++) {
-      this.put(bytes[i]);
+
+    if (bytes === null) {
+      throw new Error("bytes must not be undefined");
     }
+
+    bytes.forEach((byte) => {
+      this.put(byte);
+    });
     // put null character as terminal character
     this.put(0);
   }
 
-  static getString(index: number) {
-    const buf = [];
-    let ch;
-    if (index == null) {
-      index = this.position;
+  getString(index: number): string {
+    const buffer: number[] = [];
+    let char: number;
+    let idx = this.position;
+
+    if (index !== null) {
+      idx = index;
     }
     while (true) {
       if (this.buffer.length < index + 1) {
         break;
       }
-      ch = this.get(index++);
-      if (ch === 0) {
+      const tempChar = this.get(idx);
+      if (typeof tempChar === "undefined") {
+        throw new Error("tempChar must not be undefined");
+      }
+      char = tempChar;
+      idx += 1;
+      if (char === 0) {
         break;
       } else {
-        buf.push(ch);
+        buffer.push(char);
       }
     }
-    this.position = index;
-    return utf8BytesToString(buf);
+    this.position = idx;
+
+    return utf8BytesToString(new Uint8Array(buffer));
   }
 }
