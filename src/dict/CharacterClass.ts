@@ -15,36 +15,55 @@
  * limitations under the License.
  */
 
-/**
- * CharacterClass
- * @param {number} class_id
- * @param {string} class_name
- * @param {boolean} is_always_invoke
- * @param {boolean} is_grouping
- * @param {number} max_length
- * @constructor
- */
-export default class CharacterClass{
-  class_id: number
+export default class CharacterClass {
+  readonly #CLASS_ID: number;
 
-  class_name: string
+  readonly #CLASS_NAME: string;
 
-  is_always_invoke: boolean
+  readonly #IS_ALWAYS_INVOKE: boolean;
 
-  is_grouping: boolean
+  readonly #IS_GROUPING: boolean;
 
-  max_length: number
+  readonly #MAX_LENGTH: number;
 
+  /**
+   * @param classId
+   * @param className
+   * @param isAlwaysInvoke
+   * @param isGrouping
+   * @param maxLength
+   */
   constructor(
-  class_id: number,
-  class_name: string,
-  is_always_invoke: boolean,
-  is_grouping: boolean,
-  max_length: number
-) {
-  this.class_id = class_id;
-  this.class_name = class_name;
-  this.is_always_invoke = is_always_invoke;
-  this.is_grouping = is_grouping;
-  this.max_length = max_length;
+    classId: number,
+    className: string,
+    isAlwaysInvoke: boolean,
+    isGrouping: boolean,
+    maxLength: number
+  ) {
+    this.#CLASS_ID = classId;
+    this.#CLASS_NAME = className;
+    this.#IS_ALWAYS_INVOKE = isAlwaysInvoke;
+    this.#IS_GROUPING = isGrouping;
+    this.#MAX_LENGTH = maxLength;
+  }
+
+  get classId() {
+    return this.#CLASS_ID;
+  }
+
+  get className() {
+    return this.#CLASS_NAME;
+  }
+
+  get isAlwaysInvoke() {
+    return this.#IS_ALWAYS_INVOKE;
+  }
+
+  get isGrouping() {
+    return this.#IS_GROUPING;
+  }
+
+  get maxLength() {
+    return this.#MAX_LENGTH;
+  }
 }
