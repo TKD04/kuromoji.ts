@@ -15,7 +15,8 @@
  * limitations under the License.
  */
 
-import IpadicFormatter from "./util/IpadicFormatter";
+import formatIpadicKnownEntry from "./util/formatIpadicKnownEntry";
+import formatIpadicUnknownEntry from "./util/formatIpadicUnknownEntry";
 import ViterbiBuilder from "./viterbi/ViterbiBuilder";
 import ViterbiSearcher from "./viterbi/ViterbiSearcher";
 
@@ -97,7 +98,7 @@ export default class Tokenizer {
         } else {
           features = features_line.split(",");
         }
-        token = IpadicFormatter.formatKnownEntry(
+        token = formatIpadicKnownEntry(
           node.name,
           last_pos + node.start_pos,
           node.type,
@@ -111,7 +112,7 @@ export default class Tokenizer {
         } else {
           features = features_line.split(",");
         }
-        token = IpadicFormatter.formatUnknownEntry(
+        token = formatIpadicUnknownEntry(
           node.name,
           last_pos + node.start_pos,
           node.type,
@@ -120,7 +121,7 @@ export default class Tokenizer {
         );
       } else {
         // TODO User dictionary
-        token = IpadicFormatter.formatKnownEntry(
+        token = formatIpadicKnownEntry(
           node.name,
           last_pos + node.start_pos,
           node.type,
