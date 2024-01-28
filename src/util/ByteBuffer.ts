@@ -24,7 +24,7 @@ import isSurrogatePair from "./isSurrogatePair";
  * @param str UTF-16 string to convert
  * @return Byte sequence encoded by UTF-8
  */
-const stringToUtf8Bytes = (str: string): Uint8Array | null => {
+const stringToUtf8Bytes = (str: string): Uint8Array => {
   // Max size of 1 character is 4 bytes
   const bytes = new Uint8Array(str.length * 4);
   const strLen = str.length;
@@ -48,7 +48,7 @@ const stringToUtf8Bytes = (str: string): Uint8Array | null => {
           (lowSurrogates - 0xdc00);
       } else {
         // malformed surrogate pair
-        return null;
+        throw new Error(`lowSurrogates must not be malformed surrogate pair`);
       }
     } else {
       unicodeCode = utf16Code;
@@ -84,6 +84,7 @@ const stringToUtf8Bytes = (str: string): Uint8Array | null => {
       j += 1;
     } else {
       // malformed UCS4 code
+      throw new Error("unicodeCode must not be malformed UCS4 code");
     }
   }
 
@@ -343,10 +344,6 @@ export default class ByteBuffer {
 
   putString(str: string): void {
     const bytes = stringToUtf8Bytes(str);
-
-    if (bytes === null) {
-      throw new Error("bytes must not be undefined");
-    }
 
     bytes.forEach((byte) => {
       this.put(byte);
