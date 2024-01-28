@@ -51,31 +51,6 @@ export default class ByteBuffer {
     this.position = 0;
   }
 
-  size(): number {
-    return this.buffer.length;
-  }
-
-  reallocate(): void {
-    const newArray = new Uint8Array(this.buffer.length * 2);
-
-    newArray.set(this.buffer);
-    this.buffer = newArray;
-  }
-
-  shrink(): Uint8Array {
-    this.buffer = this.buffer.subarray(0, this.position);
-
-    return this.buffer;
-  }
-
-  put(b: number): void {
-    if (this.buffer.length < this.position + 1) {
-      this.reallocate();
-    }
-    this.buffer[this.position] = b;
-    this.position += 1;
-  }
-
   get(index: number) {
     let idx = this.position;
     if (index !== null) {
@@ -87,18 +62,6 @@ export default class ByteBuffer {
       return 0;
     }
     return this.buffer[idx];
-  }
-
-  // Write short to buffer by little endian
-  putShort(num: number): void {
-    if (num > 0xffff) {
-      throw new Error(`${num} is over short value`);
-    }
-    const lower = 0x00ff & num;
-    const upper = (0xff00 & num) >> 8;
-
-    this.put(lower);
-    this.put(upper);
   }
 
   // Read short from buffer by little endian
@@ -127,21 +90,6 @@ export default class ByteBuffer {
     }
 
     return value;
-  }
-
-  // Write integer to buffer by little endian
-  putInt(num: number): void {
-    if (num > 0xffffffff) {
-      throw new Error(`${num} is over integer value`);
-    }
-    const b0 = 0x000000ff & num;
-    const b1 = (0x0000ff00 & num) >> 8;
-    const b2 = (0x00ff0000 & num) >> 16;
-    const b3 = (0xff000000 & num) >> 24;
-    this.put(b0);
-    this.put(b1);
-    this.put(b2);
-    this.put(b3);
   }
 
   // Read integer from buffer by little endian
@@ -184,16 +132,6 @@ export default class ByteBuffer {
     return this.getInt(pos);
   }
 
-  putString(str: string): void {
-    const bytes = stringToUtf8Bytes(str);
-
-    bytes.forEach((byte) => {
-      this.put(byte);
-    });
-    // put null character as terminal character
-    this.put(0);
-  }
-
   getString(index: number): string {
     const buffer: number[] = [];
     let char: number;
@@ -221,5 +159,67 @@ export default class ByteBuffer {
     this.position = idx;
 
     return utf8BytesToString(new Uint8Array(buffer));
+  }
+
+  put(b: number): void {
+    if (this.buffer.length < this.position + 1) {
+      this.reallocate();
+    }
+    this.buffer[this.position] = b;
+    this.position += 1;
+  }
+
+  // Write short to buffer by little endian
+  putShort(num: number): void {
+    if (num > 0xffff) {
+      throw new Error(`${num} is over short value`);
+    }
+    const lower = 0x00ff & num;
+    const upper = (0xff00 & num) >> 8;
+
+    this.put(lower);
+    this.put(upper);
+  }
+
+  // Write integer to buffer by little endian
+  putInt(num: number): void {
+    if (num > 0xffffffff) {
+      throw new Error(`${num} is over integer value`);
+    }
+    const b0 = 0x000000ff & num;
+    const b1 = (0x0000ff00 & num) >> 8;
+    const b2 = (0x00ff0000 & num) >> 16;
+    const b3 = (0xff000000 & num) >> 24;
+    this.put(b0);
+    this.put(b1);
+    this.put(b2);
+    this.put(b3);
+  }
+
+  putString(str: string): void {
+    const bytes = stringToUtf8Bytes(str);
+
+    bytes.forEach((byte) => {
+      this.put(byte);
+    });
+    // put null character as terminal character
+    this.put(0);
+  }
+
+  size(): number {
+    return this.buffer.length;
+  }
+
+  reallocate(): void {
+    const newArray = new Uint8Array(this.buffer.length * 2);
+
+    newArray.set(this.buffer);
+    this.buffer = newArray;
+  }
+
+  shrink(): Uint8Array {
+    this.buffer = this.buffer.subarray(0, this.position);
+
+    return this.buffer;
   }
 }
