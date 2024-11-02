@@ -3,22 +3,20 @@
  * EOS stands for End Of Statement
  */
 type IpadicWordType = "BOS" | "EOS" | "KOWN" | "UNKNOWN";
-type IpadicFeatures = Readonly<
-  [
-    surfaceForm: string,
-    partOfSpeech: string,
-    partOfSpeechSubdivision1: string,
-    partOfSpeechSubdivision2: string,
-    partOfSpeechSubdivision3: string,
-    conjugatedType: string,
-    conjugatedForm: string,
-    basicForm: string,
-    howToRead: string,
-    pronunciation: string,
-  ]
->;
+type IpadicFeatures = readonly [
+  surfaceForm: string,
+  partOfSpeech: string,
+  partOfSpeechSubdivision1: string,
+  partOfSpeechSubdivision2: string,
+  partOfSpeechSubdivision3: string,
+  conjugatedType: string,
+  conjugatedForm: string,
+  basicForm: string,
+  howToRead: string,
+  pronunciation: string,
+];
 // TODO: Add specific types to partOfSpeech and so on
-type IpadicKnownEntryToken = Readonly<{
+type IpadicKnownEntryToken = readonly {
   wordId: number;
   wordType: IpadicWordType;
   /** 単語の開始位置 */
@@ -43,7 +41,7 @@ type IpadicKnownEntryToken = Readonly<{
   howToRead: string;
   /** 発音 */
   pronunciation: string;
-}>;
+};
 type IpadicUnknownEntryToken = Omit<
   IpadicKnownEntryToken,
   "howToRead" | "pronunciation"
