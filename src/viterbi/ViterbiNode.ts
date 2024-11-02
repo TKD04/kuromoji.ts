@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-import type { ViterbiNodeType } from "./ViterbiNodeType";
-
 /**
  * ViterbiNode is a node of ViterbiLattice
  */

@@ -1,9 +1,3 @@
-import type {
-  IpadicFeatures,
-  IpadicUnknownEntryToken,
-  IpadicWordType,
-} from "./Ipadic";
-
 export default (
   wordId: number,
   wordType: IpadicWordType,
