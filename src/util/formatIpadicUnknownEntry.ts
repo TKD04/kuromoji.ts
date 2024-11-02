@@ -27,7 +27,7 @@ export default (
     conjugatedType,
     conjugatedForm,
     basicForm,
-  } as const;
+  };
 
   return token;
 };

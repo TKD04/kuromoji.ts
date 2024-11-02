@@ -30,7 +30,7 @@ export default (
     basicForm,
     howToRead,
     pronunciation,
-  } as const;
+  };
 
   return token;
 };
