@@ -25,14 +25,14 @@ export default class ViterbiLattice {
     [ViterbiNode.createBeginOfStatement()],
   ];
 
-  #endOfStatemetPosition: number = 1;
+  #endOfStatementPosition: number = 1;
 
   get nodesEndAt() {
     return this.#NODES_END_AT.slice();
   }
 
   get endOfStatementPosition() {
-    return this.#endOfStatemetPosition;
+    return this.#endOfStatementPosition;
   }
 
   getLastNode(): ViterbiNode {
@@ -56,8 +56,8 @@ export default class ViterbiLattice {
     const lastPosition = node.lastPosition();
     const prevNodes = this.#NODES_END_AT[lastPosition] ?? [];
 
-    if (this.#endOfStatemetPosition < lastPosition) {
-      this.#endOfStatemetPosition = lastPosition;
+    if (this.#endOfStatementPosition < lastPosition) {
+      this.#endOfStatementPosition = lastPosition;
     }
     prevNodes.push(node);
     this.#NODES_END_AT[lastPosition] = prevNodes;
@@ -67,9 +67,9 @@ export default class ViterbiLattice {
    * Set ends with EOS (End of Statement)
    */
   appendEos(): void {
-    this.#endOfStatemetPosition += 1;
+    this.#endOfStatementPosition += 1;
     this.#NODES_END_AT[this.#NODES_END_AT.length] = [
-      ViterbiNode.createEndOfStatement(this.#endOfStatemetPosition),
+      ViterbiNode.createEndOfStatement(this.#endOfStatementPosition),
     ];
   }
 }
