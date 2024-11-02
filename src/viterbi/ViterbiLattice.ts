@@ -28,7 +28,7 @@ export default class ViterbiLattice {
   #endOfStatementPosition: number = 1;
 
   get nodesEndAt() {
-    return this.#NODES_END_AT.slice();
+    return [...this.#NODES_END_AT];
   }
 
   get endOfStatementPosition() {

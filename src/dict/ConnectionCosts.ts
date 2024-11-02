@@ -51,7 +51,7 @@ export default class ConnectionCosts {
   }
 
   get buffer() {
-    return this.#buffer.slice();
+    return [...this.#buffer];
   }
 
   get(forwardId: number, backwardId: number): number {
