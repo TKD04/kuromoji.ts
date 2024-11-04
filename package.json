@@ -12,7 +12,8 @@
   "dependencies": {
     "async": "^3.2.5",
     "doublearray": "0.0.2",
-    "zlibjs": "^0.3.1"
+    "zlibjs": "^0.3.1",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/doublearray": "^0.0.32",
