@@ -18,6 +18,7 @@
   "devDependencies": {
     "@types/doublearray": "^0.0.32",
     "@types/jest": "^29.5.11",
+    "@types/node": "^22.9.0",
     "@typescript-eslint/eslint-plugin": "^6.18.0",
     "@typescript-eslint/parser": "^6.18.0",
     "browserify": "^17.0.0",
