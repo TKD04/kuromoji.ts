@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig",
+  "include": [
+    "src",
+    "*.js",
+    "*.mjs",
+    "*.cjs",
+    "*.ts"
+  ],
+  "compilerOptions": {
+    "noEmit": true
+  }
+}
