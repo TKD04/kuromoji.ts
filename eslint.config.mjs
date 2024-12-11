@@ -70,8 +70,17 @@ export default tseslint.config(
       "@typescript-eslint/consistent-type-imports": "error",
       "@typescript-eslint/no-import-type-side-effects": "error",
       "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
-      // Since we can't omit the extension on the import statements in ESM.
-      "import/extensions": ["error", "always"],
+      "import/extensions": [
+        "error",
+        "ignorePackages",
+        {
+          js: "never",
+          jsx: "never",
+          mjs: "never",
+          ts: "never",
+          tsx: "never",
+        },
+      ],
       // https://stackoverflow.com/questions/44939304/eslint-should-be-listed-in-the-projects-dependencies-not-devdependencies
       "import/no-extraneous-dependencies": [
         "error",
