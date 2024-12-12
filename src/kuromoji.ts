@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-import TokenizerBuilder from "./TokenizerBuilder";
-import DictionaryBuilder from "./dict/builder/DictionaryBuilder";
+import DictionaryBuilder from "./dict/builder/dictionary-builder";
+import TokenizerBuilder from "./tokenizer-builder";
 
 // Public methods
 const kuromoji = {

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import ViterbiNode from "./ViterbiNode";
+import ViterbiNode from "./viterbi-node";
 
 /**
  * ViterbiLattice is a lattice in Viterbi algorithm

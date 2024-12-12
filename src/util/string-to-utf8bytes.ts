@@ -1,5 +1,5 @@
-import isLowSurrogates from "./isLowSurrogates";
-import isSurrogatePair from "./isSurrogatePair";
+import isLowSurrogates from "./is-low-surrogates";
+import isSurrogatePair from "./is-surrogate-pair";
 
 /**
  * Convert String (UTF-16) to UTF-8 ArrayBuffer

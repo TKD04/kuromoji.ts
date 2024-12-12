@@ -16,7 +16,7 @@
  */
 
 import CharacterDefinition from "../CharacterDefinition";
-import InvokeDefinitionMap from "../InvokeDefinitionMap";
+import InvokeDefinitionMap from "../invoke-definition-map";
 
 const CATEGORY_DEF_PATTERN = /^(\w+)\s+(\d)\s+(\d)\s+(\d)/;
 const CATEGORY_MAPPING_PATTERN =

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import ConnectionCosts from "../ConnectionCosts";
+import ConnectionCosts from "../connection-costs";
 
 /**
  * Builder class for constructing ConnectionCosts object

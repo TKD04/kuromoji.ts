@@ -73,7 +73,7 @@ describe("dictionaryBuilder", function () {
   it("tokenInfoDictionary", () => {
     // expect(kuromoji_dic.token_info_dictionary.getFeatures("1467000")).to.have.length.above(1);
     expect(
-      kuromoji_dic.token_info_dictionary.dictionary.buffer,
+      kuromoji_dic.token_info_dictionary.dictionary.buffer
     ).to.have.length.above(1);
   });
   it("doubleArray not to be null", () => {

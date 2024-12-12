@@ -16,9 +16,9 @@
  */
 
 import doublearray from "doublearray";
-import ConnectionCosts from "./ConnectionCosts";
-import TokenInfoDictionary from "./TokenInfoDictionary";
-import UnknownDictionary from "./UnknownDictionary";
+import ConnectionCosts from "./connection-costs";
+import TokenInfoDictionary from "./token-info-dictionary";
+import UnknownDictionary from "./unknown-dictionary";
 
 /**
  * Dictionaries container for Tokenizer

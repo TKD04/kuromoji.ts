@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import isSurrogatePair from "./isSurrogatePair";
+import isSurrogatePair from "./is-surrogate-pair";
 
 /**
  * String wrapper for UTF-16 surrogate pair (4 bytes)

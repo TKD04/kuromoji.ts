@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-import ByteBuffer from "../util/ByteBuffer";
-import CharacterClass from "./CharacterClass";
+import ByteBuffer from "../util/byte-buffer";
+import CharacterClass from "./character-class";
 
 /**
  * InvokeDefinitionMap represents invoke definition a part of char.def

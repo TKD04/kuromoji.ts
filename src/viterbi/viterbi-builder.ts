@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-import SurrogateAwareString from "../util/SurrogateAwareString";
-import ViterbiLattice from "./ViterbiLattice";
-import ViterbiNode from "./ViterbiNode";
+import SurrogateAwareString from "../util/surrogate-aware-string";
+import ViterbiLattice from "./viterbi-lattice";
+import ViterbiNode from "./viterbi-node";
 
 /**
  * ViterbiBuilder builds word lattice (ViterbiLattice)

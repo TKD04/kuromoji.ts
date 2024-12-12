@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-import Tokenizer from "./Tokenizer";
-import DictionaryLoader from "./loader/DictionaryLoader";
+import DictionaryLoader from "./loader/dictionary-loader";
+import Tokenizer from "./tokenizer";
 
 /**
  * TokenizerBuilder create Tokenizer instance.

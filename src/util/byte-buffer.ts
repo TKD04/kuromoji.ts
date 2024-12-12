@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-import stringToUtf8Bytes from "./stringToUtf8Bytes";
-import utf8BytesToString from "./utf8BytesToString";
+import stringToUtf8Bytes from "./string-to-utf8bytes";
+import utf8BytesToString from "./utf8-bytes-to-string";
 
 /**
  * Utilities to manipulate byte sequence

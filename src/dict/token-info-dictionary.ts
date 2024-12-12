@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import ByteBuffer from "../util/ByteBuffer";
+import ByteBuffer from "../util/byte-buffer";
 
 /**
  * TokenInfoDictionary

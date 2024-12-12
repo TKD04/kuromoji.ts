@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-import type ConnectionCosts from "../dict/ConnectionCosts";
-import type ViterbiLattice from "./ViterbiLattice";
-import type ViterbiNode from "./ViterbiNode";
+import type ConnectionCosts from "../dict/connection-costs";
+import type ViterbiLattice from "./viterbi-lattice";
+import type ViterbiNode from "./viterbi-node";
 
 /**
  * ViterbiSearcher is for searching best Viterbi path

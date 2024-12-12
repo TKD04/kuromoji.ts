@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-import isSurrogatePair from "../util/isSurrogatePair";
-import CharacterClass from "./CharacterClass";
-import InvokeDefinitionMap from "./InvokeDefinitionMap";
+import isSurrogatePair from "../util/is-surrogate-pair";
+import CharacterClass from "./character-class";
+import InvokeDefinitionMap from "./invoke-definition-map";
 
 const DEFAULT_CATEGORY = "DEFAULT";
 

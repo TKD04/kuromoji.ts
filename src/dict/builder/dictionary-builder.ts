@@ -16,11 +16,11 @@
  */
 
 import doublearray from "doublearray";
-import DynamicDictionaries from "../DynamicDictionaries";
-import TokenInfoDictionary from "../TokenInfoDictionary";
-import UnknownDictionary from "../UnknownDictionary";
-import CharacterDefinitionBuilder from "./CharacterDefinitionBuilder";
-import ConnectionCostsBuilder from "./ConnectionCostsBuilder";
+import DynamicDictionaries from "../dynamic-dictionaries";
+import TokenInfoDictionary from "../token-info-dictionary";
+import UnknownDictionary from "../unknown-dictionary";
+import CharacterDefinitionBuilder from "./character-definition-builder";
+import ConnectionCostsBuilder from "./connection-costs-builder";
 
 /**
  * Build dictionaries (token info, connection costs)

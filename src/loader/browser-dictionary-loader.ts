@@ -16,7 +16,7 @@
  */
 
 import zlibjs from "zlibjs";
-import DictionaryLoader from "./DictionaryLoader";
+import DictionaryLoader from "./dictionary-loader";
 
 /**
  * BrowserDictionaryLoader inherits DictionaryLoader, using jQuery XHR for download

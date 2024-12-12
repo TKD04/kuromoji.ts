@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-import ByteBuffer from "../util/ByteBuffer";
+import ByteBuffer from "../util/byte-buffer";
 import CharacterDefinition from "./CharacterDefinition";
-import TokenInfoDictionary from "./TokenInfoDictionary";
+import TokenInfoDictionary from "./token-info-dictionary";
 
 /**
  * UnknownDictionary

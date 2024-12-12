@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-import formatIpadicKnownEntry from "./util/formatIpadicKnownEntry";
-import formatIpadicUnknownEntry from "./util/formatIpadicUnknownEntry";
-import ViterbiBuilder from "./viterbi/ViterbiBuilder";
-import ViterbiSearcher from "./viterbi/ViterbiSearcher";
+import formatIpadicKnownEntry from "./util/format-ipadic-known-entry";
+import formatIpadicUnknownEntry from "./util/format-ipadic-unknown-entry";
+import ViterbiBuilder from "./viterbi/viterbi-builder";
+import ViterbiSearcher from "./viterbi/viterbi-searcher";
 
 const PUNCTUATION = /、|。/;
 
