@@ -1,3 +1,9 @@
+/**
+ * Returns a non-negative integer number representing of a surrogate pair code point value.
+ * @param highSurrogateCodePoint A non-negative integer number representing of a high surrogate code point value.
+ * @param lowSurrogateCodePoint A non-negative integer number representing of a low surrogate code point value.
+ * @returns A non-negative integer number representing of a surrogate pair code point value.
+ */
 const convertToSurrogatePair = (
   highSurrogateCodePoint: number,
   lowSurrogateCodePoint: number
