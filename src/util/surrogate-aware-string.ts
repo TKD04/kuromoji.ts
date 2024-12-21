@@ -15,101 +15,108 @@
  * limitations under the License.
  */
 
+import convertToSurrogatePair from "./convert-to-surrogate-pair";
 import isSurrogatePair from "./is-surrogate-pair";
 
 /**
- * String wrapper for UTF-16 surrogate pair (4 bytes)
+ * A wrapper class of the String object to support a surrogate pair (UTF-16 4 bytes).
  */
 export default class SurrogateAwareString {
-  readonly #STR: string;
-
-  readonly #INDEX_MAPPING: number[];
-
-  readonly #LENGTH: number;
+  /**
+   * Returns the length of String object that can correctly counts a surrogate pair.
+   * @returns the length of String object that can correctly counts a surrogate pair.
+   */
+  get length() {
+    return this.#SPREADED_STRING.length;
+  }
 
   /**
-   * @param str String to wrap
+   * A string array that was converted from rawString using the spread operator to handle a surrogate pair.
    */
-  constructor(str: string) {
-    this.#STR = str;
-    this.#INDEX_MAPPING = [];
+  readonly #SPREADED_STRING: string[];
 
-    const strLen = str.length;
-    for (let pos = 0; pos < strLen; pos += 1) {
-      const char = str.charAt(pos);
-      this.#INDEX_MAPPING.push(pos);
-      if (isSurrogatePair(char)) {
-        pos += 1;
-      }
-    }
-    // Surrogate aware length
-    this.#LENGTH = this.#INDEX_MAPPING.length;
+  /**
+   * Create a string object that can correctly handle a surrogate pair.
+   * @param rawString A string that may contain a surrogate pair.
+   */
+  constructor(rawString: string) {
+    this.#SPREADED_STRING = [...rawString];
   }
 
-  get indexMapping() {
-    return this.#INDEX_MAPPING.slice();
-  }
-
-  get length() {
-    return this.#LENGTH;
-  }
-
-  charAt(index: number): string {
-    if (this.#STR.length <= index) {
+  /**
+   * Returns the character at the specified index.
+   * @param pos The zero-based index of the desired character.
+   * If omitted, then the default index is 0.
+   * @returns The character at the specified index.
+   */
+  charAt(pos = 0): string {
+    if (this.#isIndexOutOfBounds(pos)) {
       return "";
     }
-    const surrogateAwareStartIndex = this.#INDEX_MAPPING[index];
-    const surrogateAwareEndIndex = this.#INDEX_MAPPING[index + 1];
+    const surroageAwareChar = this.#SPREADED_STRING[pos];
 
-    if (typeof surrogateAwareStartIndex === "undefined") {
-      throw new Error("surrogateAwareStartIndex must not be undefined");
-    }
-    if (typeof surrogateAwareEndIndex === "undefined") {
-      return this.#STR.slice(surrogateAwareStartIndex);
+    if (surroageAwareChar === undefined) {
+      throw new Error("surrogateAwareChar must not be undefined");
     }
 
-    return this.#STR.slice(surrogateAwareStartIndex, surrogateAwareEndIndex);
+    return surroageAwareChar;
   }
 
-  charCodeAt(index: number): number {
-    if (this.#INDEX_MAPPING.length <= index) {
-      return NaN;
+  /**
+   * Returns a non-negative integer number representing the code point value of the UTF-16 encoded code point.
+   * @param pos The zero-based index of the desired character.
+   * If omitted, then the default index is 0.
+   * @returns A non-negative integer number representing the code point value of the UTF-16 encoded code point.
+   */
+  codePointAt(pos: number): number {
+    if (this.#isIndexOutOfBounds(pos)) {
+      return Number.NaN;
     }
-    const surrogateAwareIndex = this.#INDEX_MAPPING[index];
-    if (typeof surrogateAwareIndex === "undefined") {
-      throw new Error("surrogateAwareIndex must not be undefined");
-    }
-    const upper = this.#STR.charCodeAt(surrogateAwareIndex);
-    let lower;
+    const codePoint = this.#SPREADED_STRING[pos]?.codePointAt(0);
 
-    if (
-      upper >= 0xd800 &&
-      upper <= 0xdbff &&
-      surrogateAwareIndex < this.#STR.length
-    ) {
-      lower = this.#STR.charCodeAt(surrogateAwareIndex + 1);
-      if (lower >= 0xdc00 && lower <= 0xdfff) {
-        return (upper - 0xd800) * 0x400 + lower - 0xdc00 + 0x10000;
+    if (codePoint === undefined) {
+      throw new Error("codePoint is undefined");
+    }
+
+    if (isSurrogatePair(codePoint)) {
+      const lowSurrogateCodePoint = this.#SPREADED_STRING
+        .at(pos + 1)
+        ?.codePointAt(0);
+
+      if (lowSurrogateCodePoint === undefined) {
+        throw new Error("lowSurrogate is undefined");
       }
+
+      return convertToSurrogatePair(codePoint, lowSurrogateCodePoint);
     }
 
-    return upper;
+    return codePoint;
   }
 
+  /**
+   * Returns a section of string.
+   * @param start The index to the beginning of the specified portion of String object.
+   * If omitted, then the slice begins at index 0.
+   * @returns a section of string.
+   */
+  slice(start = 0): string {
+    return this.#SPREADED_STRING.slice(start).join("");
+  }
+
+  /**
+   * Returns the string that the String object has as it is.
+   * @returns the string that the String object has as it is.
+   */
   toString(): string {
-    return this.#STR;
+    return this.#SPREADED_STRING.join("");
   }
 
-  slice(index: number): string {
-    if (this.#LENGTH <= index) {
-      return "";
-    }
-    const surrogateAwareIndex = this.#INDEX_MAPPING[index];
-
-    if (typeof surrogateAwareIndex === "undefined") {
-      throw new Error("surrogateAwareIndex must not be undefined");
-    }
-
-    return this.#STR.slice(surrogateAwareIndex);
+  /**
+   * Returns a boolean value indicating whether index is out of bounds by the length of the string.
+   * @param index the zero-based index.
+   * @returns a boolean value indicating whether index is out of bounds by the length of the string.
+   */
+  #isIndexOutOfBounds(index: number): boolean {
+    return this.#SPREADED_STRING.length <= index || index < 0;
   }
 }
