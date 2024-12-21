@@ -1,6 +1,9 @@
-export default (char: string | number): boolean => {
-  const isString = typeof char === "string";
-  const utf16Code = isString ? char.charCodeAt(0) : char;
+/**
+ * Returns a boolean value representing whether the codePoint is a high or low surrogate.
+ * @param codePoint A non-negative integer number representing the code point value of the UTF-16 encoded code point.
+ * @returns A boolean value representing whether the codePoint is a high or low surrogate.
+ */
+const isSurrogatePair = (codePoint: number): boolean =>
+  codePoint >= 0xd8_00 && codePoint <= 0xdb_ff;
 
-  return utf16Code >= 0xd800 && utf16Code <= 0xdbff;
-};
+export default isSurrogatePair;
