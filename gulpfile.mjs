@@ -1,20 +1,25 @@
-const fs = require("fs");
-const gulp = require("gulp");
-const del = require("del");
-const sequence = require("run-sequence");
-const { merge } = require("event-stream");
-const browserify = require("browserify");
-const source = require("vinyl-source-stream");
-const gzip = require("gulp-gzip");
-const mocha = require("gulp-mocha");
-const istanbul = require("gulp-istanbul");
-const webserver = require("gulp-webserver");
-const jsdoc = require("gulp-jsdoc3");
-const bower = require("gulp-bower");
-const ghPages = require("gulp-gh-pages-will");
-const bump = require("gulp-bump");
-const argv = require("minimist")(process.argv.slice(2));
-const git = require("gulp-git");
+import browserify from "browserify";
+import del from "del";
+import { merge } from "event-stream";
+import fs from "fs";
+import gulp from "gulp";
+import bower from "gulp-bower";
+import bump from "gulp-bump";
+import ghPages from "gulp-gh-pages-will";
+import git from "gulp-git";
+import gzip from "gulp-gzip";
+import istanbul from "gulp-istanbul";
+import jsdoc from "gulp-jsdoc3";
+import mocha from "gulp-mocha";
+import webserver from "gulp-webserver";
+import IPADic from "mecab-ipadic-seed";
+import minimist from "minimist";
+import sequence from "run-sequence";
+import source from "vinyl-source-stream";
+
+import kuromoji from "./src/kuromoji.js";
+
+const argv = minimist(process.argv.slice(2));
 
 gulp.task("clean", (done) =>
   del([".publish/", "coverage/", "build/", "publish/"], done)
@@ -37,9 +42,6 @@ gulp.task("watch", () => {
 gulp.task("clean-dict", (done) => del(["dict/"], done));
 
 gulp.task("create-dat-files", (done) => {
-  const IPADic = require("mecab-ipadic-seed");
-  const kuromoji = require("./src/kuromoji.js");
-
   if (!fs.existsSync("dict/")) {
     fs.mkdirSync("dict/");
   }
