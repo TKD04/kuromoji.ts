@@ -1,3 +1,4 @@
+// eslint-disable-next-line jsdoc/check-tag-names
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
   coverageProvider: "v8",
