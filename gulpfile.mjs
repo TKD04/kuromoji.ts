@@ -3,7 +3,6 @@ const gulp = require("gulp");
 const del = require("del");
 const sequence = require("run-sequence");
 const { merge } = require("event-stream");
-const jshint = require("gulp-jshint");
 const browserify = require("browserify");
 const source = require("vinyl-source-stream");
 const gzip = require("gulp-gzip");
@@ -179,10 +178,6 @@ gulp.task("coverage", ["test"], (done) => {
         .on("end", done);
     });
 });
-
-gulp.task("lint", () =>
-  gulp.src(["src/**/*.js"]).pipe(jshint()).pipe(jshint.reporter("default"))
-);
 
 gulp.task("clean-jsdoc", (done) => del(["publish/jsdoc/"], done));
 
