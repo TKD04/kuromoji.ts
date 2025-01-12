@@ -1,7 +1,8 @@
+import fs from "node:fs";
+
 import browserify from "browserify";
 import del from "del";
 import { merge } from "event-stream";
-import fs from "fs";
 import gulp from "gulp";
 import bower from "gulp-bower";
 import bump from "gulp-bump";
