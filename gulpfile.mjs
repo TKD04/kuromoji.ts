@@ -20,29 +20,29 @@ import source from "vinyl-source-stream";
 
 import kuromoji from "./src/kuromoji.js";
 
+const { dest, series, src } = GulpClient;
+const gulpWatch = GulpClient.watch;
 const argv = minimist(process.argv.slice(2));
 
-GulpClient.task("clean", (done) =>
-  deleteAsync([".publish/", "coverage/", "build/", "publish/"], done)
-);
-
-GulpClient.task("build", ["clean"], () =>
+export const clean = () =>
+  deleteAsync([".publish/", "coverage/", "build/", "publish/"]);
+export const build = series(clean, () => {
   browserify({
     entries: ["src/kuromoji.js"],
-    standalone: "kuromoji", // window.kuromoji
+    // window.kuromoji
+    standalone: "kuromoji",
   })
     .bundle()
     .pipe(source("kuromoji.js"))
-    .pipe(GulpClient.dest("build/"))
-);
-
-GulpClient.task("watch", () => {
-  GulpClient.watch(["src/**/*.js", "test/**/*.js"], ["lint", "build", "jsdoc"]);
+    .pipe(dest("build/"));
 });
-
-GulpClient.task("clean-dict", (done) => deleteAsync(["dict/"], done));
-
-GulpClient.task("create-dat-files", (done) => {
+// TODO: Replace string with variable for function
+export const watch = gulpWatch(
+  ["src/**/*.js", "test/**/*.js"],
+  ["lint", "build", "jsdoc"]
+);
+export const cleanDictionary = () => deleteAsync("dict/");
+export const createDatFiles = () => {
   if (!fs.existsSync("dict/")) {
     fs.mkdirSync("dict/");
   }
@@ -152,77 +152,72 @@ GulpClient.task("create-dat-files", (done) => {
 
       done();
     });
+};
+export const compressDictionary = () =>
+  src("dict/*.dat").pipe(gzip()).pipe(GulpClient.dest("dict/"));
+export const cleanDatFiles = () => deleteAsync("dict/*.dat");
+// TODO: Can I remove "sequence"
+export const buildDictionary = series(build, cleanDictionary, () => {
+  sequence("create-dat-files", "compress-dict", "clean-dat-files");
 });
-
-GulpClient.task("compress-dict", () =>
-  GulpClient.src("dict/*.dat").pipe(gzip()).pipe(GulpClient.dest("dict/"))
-);
-
-GulpClient.task("clean-dat-files", (done) => deleteAsync(["dict/*.dat"], done));
-
 GulpClient.task("build-dict", ["build", "clean-dict"], () => {
   sequence("create-dat-files", "compress-dict", "clean-dat-files");
 });
-
-GulpClient.task("test", ["build"], () =>
-  GulpClient.src("test/**/*.js", { read: false }).pipe(
-    mocha({ reporter: "list" })
-  )
+// TODO: Replace mocha with jest
+export const test = series(build, () =>
+  src("test/**/*.js", { read: false }).pipe(mocha({ reporter: "list" }))
 );
-
-GulpClient.task("coverage", ["test"], (done) => {
-  GulpClient.src(["src/**/*.js"])
-    .pipe(istanbul())
-    .pipe(istanbul.hookRequire())
-    .on("finish", () => {
-      GulpClient.src(["test/**/*.js"])
-        .pipe(mocha({ reporter: "mocha-lcov-reporter" }))
-        .pipe(istanbul.writeReports())
-        .on("end", done);
-    });
-});
-
-GulpClient.task("clean-jsdoc", (done) => deleteAsync(["publish/jsdoc/"], done));
-
-GulpClient.task("jsdoc", ["clean-jsdoc"], (cb) => {
+export const coverage = () =>
+  series(
+    test,
+    src(["src/**/*.js"])
+      .pipe(istanbul())
+      .pipe(istanbul.hookRequire())
+      .on("finish", () => {
+        src(["test/**/*.js"])
+          .pipe(mocha({ reporter: "mocha-lcov-reporter" }))
+          .pipe(istanbul.writeReports());
+      })
+  );
+export const cleanJsdoc = () => deleteAsync("publish/jsdoc/");
+// TODO: Replace "require" to "import"
+export const buildJsdoc = series(cleanJsdoc, (done) => {
   const config = require("./jsdoc.json");
-  GulpClient.src(["src/**/*.js"], { read: false }).pipe(jsdoc(config, cb));
+
+  src(["src/**/*.js"], { read: false }).pipe(jsdoc(config, done));
 });
-
-GulpClient.task("clean-demo", (done) => deleteAsync(["publish/demo/"], done));
-
-GulpClient.task("copy-demo", ["clean-demo", "build"], () =>
-  merge(
-    GulpClient.src("demo/**/*").pipe(GulpClient.dest("publish/demo/")),
-    GulpClient.src("build/**/*").pipe(
-      GulpClient.dest("publish/demo/kuromoji/build/")
-    ),
-    GulpClient.src("dict/**/*").pipe(
-      GulpClient.dest("publish/demo/kuromoji/dict/")
+export const cleanDemo = () => deleteAsync("publish/demo/");
+// TODO: Can I replace "merge" with "parallel"
+export const copyDemo = () =>
+  series(
+    cleanDemo,
+    build,
+    merge(
+      src("demo/**/*").pipe(GulpClient.dest("publish/demo/")),
+      src("build/**/*").pipe(dest("publish/demo/kuromoji/build/")),
+      src("dict/**/*").pipe(dest("publish/demo/kuromoji/dict/"))
     )
-  )
-);
-
-GulpClient.task("build-demo", ["copy-demo"], () =>
+  );
+export const buildDemo = series(copyDemo, () =>
   bower({ cwd: "publish/demo/" })
 );
-
-GulpClient.task("webserver", ["build-demo", "jsdoc"], () => {
-  GulpClient.src("publish/").pipe(
+export const webServer = series(buildDemo, jsdoc, () => {
+  src("publish/").pipe(
     webserver({
-      port: 8000,
-      livereload: true,
       directoryListing: true,
+      livereload: true,
+      port: 8000,
     })
   );
 });
-
-GulpClient.task("deploy", ["build-demo", "jsdoc"], () =>
-  GulpClient.src("publish/**/*").pipe(ghPages())
+export const deploy = series(
+  buildDemo,
+  jsdoc,
+  src("publish/**/*").pipe(ghPages())
 );
-
-GulpClient.task("version", () => {
+export const version = () => {
   let type = "patch";
+
   if (argv.minor) {
     type = "minor";
   }
@@ -232,28 +227,26 @@ GulpClient.task("version", () => {
   if (argv.prerelease) {
     type = "prerelease";
   }
-  return GulpClient.src(["./bower.json", "./package.json"])
-    .pipe(bump({ type }))
-    .pipe(GulpClient.dest("./"));
-});
 
-GulpClient.task("release-commit", () => {
+  return src(["./bower.json", "./package.json"])
+    .pipe(bump({ type }))
+    .pipe(dest("./"));
+};
+export const releaseCommit = () => {
   const { version } = JSON.parse(fs.readFileSync("./package.json", "utf8"));
-  return GulpClient.src(".")
+
+  return src(".")
     .pipe(git.add())
     .pipe(git.commit(`chore: release ${version}`));
-});
-
-GulpClient.task("release-tag", (callback) => {
+};
+export const releaseTag = (done) => {
   const { version } = JSON.parse(fs.readFileSync("./package.json", "utf8"));
+
   git.tag(version, `${version} release`, (error) => {
     if (error) {
-      return callback(error);
+      return done(error);
     }
-    callback();
+    done();
   });
-});
-
-GulpClient.task("release", ["test"], () => {
-  sequence("release-commit", "release-tag");
-});
+};
+export const release = series(test, sequence("release-commit", "release-tag"));
