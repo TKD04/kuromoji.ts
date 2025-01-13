@@ -81,8 +81,8 @@
   },
   "scripts": {
     "build": "gulp build",
-    "build-demo": "gulp build-demo",
-    "build-dict": "gulp build-dict",
+    "build-demo": "gulp buildDemo",
+    "build-dict": "gulp buildDictionary",
     "clean": "gulp clean",
     "coverage": "gulp coverage",
     "deploy": "gulp deploy",
