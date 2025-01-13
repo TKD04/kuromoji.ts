@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
 import browserify from "browserify";
 import { deleteAsync } from "del";
@@ -43,8 +43,8 @@ export const watch = gulpWatch(
 );
 export const cleanDictionary = () => deleteAsync("dict/");
 export const createDatFiles = () => {
-  if (!fs.existsSync("dict/")) {
-    fs.mkdirSync("dict/");
+  if (!existsSync("dict/")) {
+    mkdirSync("dict/");
   }
 
   // To node.js Buffer
@@ -137,18 +137,18 @@ export const createDatFiles = () => {
         dic.unknown_dictionary.character_definition.invoke_definition_map.toBuffer()
       );
 
-      fs.writeFileSync("dict/base.dat", base_buffer);
-      fs.writeFileSync("dict/check.dat", check_buffer);
-      fs.writeFileSync("dict/tid.dat", token_info_buffer);
-      fs.writeFileSync("dict/tid_pos.dat", tid_pos_buffer);
-      fs.writeFileSync("dict/tid_map.dat", tid_map_buffer);
-      fs.writeFileSync("dict/cc.dat", connection_costs_buffer);
-      fs.writeFileSync("dict/unk.dat", unk_buffer);
-      fs.writeFileSync("dict/unk_pos.dat", unk_pos_buffer);
-      fs.writeFileSync("dict/unk_map.dat", unk_map_buffer);
-      fs.writeFileSync("dict/unk_char.dat", char_map_buffer);
-      fs.writeFileSync("dict/unk_compat.dat", char_compat_map_buffer);
-      fs.writeFileSync("dict/unk_invoke.dat", invoke_definition_map_buffer);
+      writeFileSync("dict/base.dat", base_buffer);
+      writeFileSync("dict/check.dat", check_buffer);
+      writeFileSync("dict/tid.dat", token_info_buffer);
+      writeFileSync("dict/tid_pos.dat", tid_pos_buffer);
+      writeFileSync("dict/tid_map.dat", tid_map_buffer);
+      writeFileSync("dict/cc.dat", connection_costs_buffer);
+      writeFileSync("dict/unk.dat", unk_buffer);
+      writeFileSync("dict/unk_pos.dat", unk_pos_buffer);
+      writeFileSync("dict/unk_map.dat", unk_map_buffer);
+      writeFileSync("dict/unk_char.dat", char_map_buffer);
+      writeFileSync("dict/unk_compat.dat", char_compat_map_buffer);
+      writeFileSync("dict/unk_invoke.dat", invoke_definition_map_buffer);
 
       done();
     });
@@ -233,14 +233,14 @@ export const version = () => {
     .pipe(dest("./"));
 };
 export const releaseCommit = () => {
-  const { version } = JSON.parse(fs.readFileSync("./package.json", "utf8"));
+  const { version } = JSON.parse(readFileSync("./package.json", "utf8"));
 
   return src(".")
     .pipe(git.add())
     .pipe(git.commit(`chore: release ${version}`));
 };
 export const releaseTag = (done) => {
-  const { version } = JSON.parse(fs.readFileSync("./package.json", "utf8"));
+  const { version } = JSON.parse(readFileSync("./package.json", "utf8"));
 
   git.tag(version, `${version} release`, (error) => {
     if (error) {
