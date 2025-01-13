@@ -3,7 +3,7 @@ import fs from "node:fs";
 import browserify from "browserify";
 import { deleteAsync } from "del";
 import { merge } from "event-stream";
-import gulp from "gulp";
+import GulpClient from "gulp";
 import bower from "gulp-bower";
 import bump from "gulp-bump";
 import ghPages from "gulp-gh-pages-will";
@@ -22,27 +22,27 @@ import kuromoji from "./src/kuromoji.js";
 
 const argv = minimist(process.argv.slice(2));
 
-gulp.task("clean", (done) =>
+GulpClient.task("clean", (done) =>
   deleteAsync([".publish/", "coverage/", "build/", "publish/"], done)
 );
 
-gulp.task("build", ["clean"], () =>
+GulpClient.task("build", ["clean"], () =>
   browserify({
     entries: ["src/kuromoji.js"],
     standalone: "kuromoji", // window.kuromoji
   })
     .bundle()
     .pipe(source("kuromoji.js"))
-    .pipe(gulp.dest("build/"))
+    .pipe(GulpClient.dest("build/"))
 );
 
-gulp.task("watch", () => {
-  gulp.watch(["src/**/*.js", "test/**/*.js"], ["lint", "build", "jsdoc"]);
+GulpClient.task("watch", () => {
+  GulpClient.watch(["src/**/*.js", "test/**/*.js"], ["lint", "build", "jsdoc"]);
 });
 
-gulp.task("clean-dict", (done) => deleteAsync(["dict/"], done));
+GulpClient.task("clean-dict", (done) => deleteAsync(["dict/"], done));
 
-gulp.task("create-dat-files", (done) => {
+GulpClient.task("create-dat-files", (done) => {
   if (!fs.existsSync("dict/")) {
     fs.mkdirSync("dict/");
   }
@@ -154,55 +154,61 @@ gulp.task("create-dat-files", (done) => {
     });
 });
 
-gulp.task("compress-dict", () =>
-  gulp.src("dict/*.dat").pipe(gzip()).pipe(gulp.dest("dict/"))
+GulpClient.task("compress-dict", () =>
+  GulpClient.src("dict/*.dat").pipe(gzip()).pipe(GulpClient.dest("dict/"))
 );
 
-gulp.task("clean-dat-files", (done) => deleteAsync(["dict/*.dat"], done));
+GulpClient.task("clean-dat-files", (done) => deleteAsync(["dict/*.dat"], done));
 
-gulp.task("build-dict", ["build", "clean-dict"], () => {
+GulpClient.task("build-dict", ["build", "clean-dict"], () => {
   sequence("create-dat-files", "compress-dict", "clean-dat-files");
 });
 
-gulp.task("test", ["build"], () =>
-  gulp.src("test/**/*.js", { read: false }).pipe(mocha({ reporter: "list" }))
+GulpClient.task("test", ["build"], () =>
+  GulpClient.src("test/**/*.js", { read: false }).pipe(
+    mocha({ reporter: "list" })
+  )
 );
 
-gulp.task("coverage", ["test"], (done) => {
-  gulp
-    .src(["src/**/*.js"])
+GulpClient.task("coverage", ["test"], (done) => {
+  GulpClient.src(["src/**/*.js"])
     .pipe(istanbul())
     .pipe(istanbul.hookRequire())
     .on("finish", () => {
-      gulp
-        .src(["test/**/*.js"])
+      GulpClient.src(["test/**/*.js"])
         .pipe(mocha({ reporter: "mocha-lcov-reporter" }))
         .pipe(istanbul.writeReports())
         .on("end", done);
     });
 });
 
-gulp.task("clean-jsdoc", (done) => deleteAsync(["publish/jsdoc/"], done));
+GulpClient.task("clean-jsdoc", (done) => deleteAsync(["publish/jsdoc/"], done));
 
-gulp.task("jsdoc", ["clean-jsdoc"], (cb) => {
+GulpClient.task("jsdoc", ["clean-jsdoc"], (cb) => {
   const config = require("./jsdoc.json");
-  gulp.src(["src/**/*.js"], { read: false }).pipe(jsdoc(config, cb));
+  GulpClient.src(["src/**/*.js"], { read: false }).pipe(jsdoc(config, cb));
 });
 
-gulp.task("clean-demo", (done) => deleteAsync(["publish/demo/"], done));
+GulpClient.task("clean-demo", (done) => deleteAsync(["publish/demo/"], done));
 
-gulp.task("copy-demo", ["clean-demo", "build"], () =>
+GulpClient.task("copy-demo", ["clean-demo", "build"], () =>
   merge(
-    gulp.src("demo/**/*").pipe(gulp.dest("publish/demo/")),
-    gulp.src("build/**/*").pipe(gulp.dest("publish/demo/kuromoji/build/")),
-    gulp.src("dict/**/*").pipe(gulp.dest("publish/demo/kuromoji/dict/"))
+    GulpClient.src("demo/**/*").pipe(GulpClient.dest("publish/demo/")),
+    GulpClient.src("build/**/*").pipe(
+      GulpClient.dest("publish/demo/kuromoji/build/")
+    ),
+    GulpClient.src("dict/**/*").pipe(
+      GulpClient.dest("publish/demo/kuromoji/dict/")
+    )
   )
 );
 
-gulp.task("build-demo", ["copy-demo"], () => bower({ cwd: "publish/demo/" }));
+GulpClient.task("build-demo", ["copy-demo"], () =>
+  bower({ cwd: "publish/demo/" })
+);
 
-gulp.task("webserver", ["build-demo", "jsdoc"], () => {
-  gulp.src("publish/").pipe(
+GulpClient.task("webserver", ["build-demo", "jsdoc"], () => {
+  GulpClient.src("publish/").pipe(
     webserver({
       port: 8000,
       livereload: true,
@@ -211,11 +217,11 @@ gulp.task("webserver", ["build-demo", "jsdoc"], () => {
   );
 });
 
-gulp.task("deploy", ["build-demo", "jsdoc"], () =>
-  gulp.src("publish/**/*").pipe(ghPages())
+GulpClient.task("deploy", ["build-demo", "jsdoc"], () =>
+  GulpClient.src("publish/**/*").pipe(ghPages())
 );
 
-gulp.task("version", () => {
+GulpClient.task("version", () => {
   let type = "patch";
   if (argv.minor) {
     type = "minor";
@@ -226,21 +232,19 @@ gulp.task("version", () => {
   if (argv.prerelease) {
     type = "prerelease";
   }
-  return gulp
-    .src(["./bower.json", "./package.json"])
+  return GulpClient.src(["./bower.json", "./package.json"])
     .pipe(bump({ type }))
-    .pipe(gulp.dest("./"));
+    .pipe(GulpClient.dest("./"));
 });
 
-gulp.task("release-commit", () => {
+GulpClient.task("release-commit", () => {
   const { version } = JSON.parse(fs.readFileSync("./package.json", "utf8"));
-  return gulp
-    .src(".")
+  return GulpClient.src(".")
     .pipe(git.add())
     .pipe(git.commit(`chore: release ${version}`));
 });
 
-gulp.task("release-tag", (callback) => {
+GulpClient.task("release-tag", (callback) => {
   const { version } = JSON.parse(fs.readFileSync("./package.json", "utf8"));
   git.tag(version, `${version} release`, (error) => {
     if (error) {
@@ -250,6 +254,6 @@ gulp.task("release-tag", (callback) => {
   });
 });
 
-gulp.task("release", ["test"], () => {
+GulpClient.task("release", ["test"], () => {
   sequence("release-commit", "release-tag");
 });
