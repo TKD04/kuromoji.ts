@@ -92,7 +92,6 @@
     "version": "gulp version",
     "watch": "gulp watch",
     "webserver": "gulp webserver",
-    "update": "ncu -u && npm i",
     "format": "prettier . --write",
     "lint": "eslint ."
   },
