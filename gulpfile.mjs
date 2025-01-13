@@ -1,7 +1,7 @@
 import fs from "node:fs";
 
 import browserify from "browserify";
-import del from "del";
+import { deleteAsync } from "del";
 import { merge } from "event-stream";
 import gulp from "gulp";
 import bower from "gulp-bower";
@@ -23,7 +23,7 @@ import kuromoji from "./src/kuromoji.js";
 const argv = minimist(process.argv.slice(2));
 
 gulp.task("clean", (done) =>
-  del([".publish/", "coverage/", "build/", "publish/"], done)
+  deleteAsync([".publish/", "coverage/", "build/", "publish/"], done)
 );
 
 gulp.task("build", ["clean"], () =>
@@ -40,7 +40,7 @@ gulp.task("watch", () => {
   gulp.watch(["src/**/*.js", "test/**/*.js"], ["lint", "build", "jsdoc"]);
 });
 
-gulp.task("clean-dict", (done) => del(["dict/"], done));
+gulp.task("clean-dict", (done) => deleteAsync(["dict/"], done));
 
 gulp.task("create-dat-files", (done) => {
   if (!fs.existsSync("dict/")) {
@@ -158,7 +158,7 @@ gulp.task("compress-dict", () =>
   gulp.src("dict/*.dat").pipe(gzip()).pipe(gulp.dest("dict/"))
 );
 
-gulp.task("clean-dat-files", (done) => del(["dict/*.dat"], done));
+gulp.task("clean-dat-files", (done) => deleteAsync(["dict/*.dat"], done));
 
 gulp.task("build-dict", ["build", "clean-dict"], () => {
   sequence("create-dat-files", "compress-dict", "clean-dat-files");
@@ -182,14 +182,14 @@ gulp.task("coverage", ["test"], (done) => {
     });
 });
 
-gulp.task("clean-jsdoc", (done) => del(["publish/jsdoc/"], done));
+gulp.task("clean-jsdoc", (done) => deleteAsync(["publish/jsdoc/"], done));
 
 gulp.task("jsdoc", ["clean-jsdoc"], (cb) => {
   const config = require("./jsdoc.json");
   gulp.src(["src/**/*.js"], { read: false }).pipe(jsdoc(config, cb));
 });
 
-gulp.task("clean-demo", (done) => del(["publish/demo/"], done));
+gulp.task("clean-demo", (done) => deleteAsync(["publish/demo/"], done));
 
 gulp.task("copy-demo", ["clean-demo", "build"], () =>
   merge(
