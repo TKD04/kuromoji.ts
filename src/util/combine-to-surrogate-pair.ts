@@ -7,7 +7,7 @@ import isLowSurrogate from "./is-low-surrogate";
  * @param lowSurrogateCodePoint A non-negative integer number representing of a low surrogate code point value.
  * @returns A non-negative integer number representing of a surrogate pair code point value.
  */
-const convertToSurrogatePair = (
+const combineToSurrogatePair = (
   highSurrogateCodePoint: number,
   lowSurrogateCodePoint: number
 ): number => {
@@ -29,4 +29,4 @@ const convertToSurrogatePair = (
   );
 };
 
-export default convertToSurrogatePair;
+export default combineToSurrogatePair;

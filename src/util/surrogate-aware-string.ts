@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import convertToSurrogatePair from "./convert-to-surrogate-pair";
+import combineToSurrogatePair from "./combine-to-surrogate-pair";
 import isSurrogatePair from "./is-surrogate-pair";
 
 /**
@@ -87,7 +87,7 @@ export default class SurrogateAwareString {
         throw new Error("lowSurrogate is undefined");
       }
 
-      return convertToSurrogatePair(codePoint, lowSurrogateCodePoint);
+      return combineToSurrogatePair(codePoint, lowSurrogateCodePoint);
     }
 
     return codePoint;
