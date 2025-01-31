@@ -19,7 +19,7 @@ import combineSurrogatePair from "./combine-surrogate-pair";
 import isSurrogatePair from "./is-surrogate-pair";
 
 /**
- * A wrapper class of the String object to support a surrogate pair (UTF-16 4 bytes).
+ * Represents a wrapper class of the String object to support a surrogate pair.
  */
 export default class SurrogateAwareString {
   /**
