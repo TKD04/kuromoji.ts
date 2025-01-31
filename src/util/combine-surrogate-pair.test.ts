@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@jest/globals";
 
-import combineToSurrogatePair from "./combine-to-surrogate-pair";
+import combineSurrogatePair from "./combine-surrogate-pair";
 
 describe("function convertToSurrogatePair()", () => {
   it("converts to a surrogate pair code point from the high and low surrogate code points", () => {
@@ -12,7 +12,7 @@ describe("function convertToSurrogatePair()", () => {
     const highSurrogateCodePoint = 0xd8_3d;
     const lowSurrogateCodePoint = 0xde_03;
 
-    const actual = combineToSurrogatePair(
+    const actual = combineSurrogatePair(
       highSurrogateCodePoint,
       lowSurrogateCodePoint
     );
@@ -27,7 +27,7 @@ describe("function convertToSurrogatePair()", () => {
       const notHighSurrogateCodePoint = 0x61;
       const lowSurrogateCodePoint = 0xde_03;
 
-      combineToSurrogatePair(notHighSurrogateCodePoint, lowSurrogateCodePoint);
+      combineSurrogatePair(notHighSurrogateCodePoint, lowSurrogateCodePoint);
     }).toThrow(
       new RangeError("highSurrogateCodePoint (0x61) is not a high surrogate.")
     );
@@ -40,7 +40,7 @@ describe("function convertToSurrogatePair()", () => {
       const highSurrogateCodePoint = 0xd8_3d;
       const notLowSurrogateCodePoint = 0x61;
 
-      combineToSurrogatePair(highSurrogateCodePoint, notLowSurrogateCodePoint);
+      combineSurrogatePair(highSurrogateCodePoint, notLowSurrogateCodePoint);
     }).toThrow(
       new RangeError("lowSurrogateCodePoint (0x61) is not a low surrogate.")
     );
