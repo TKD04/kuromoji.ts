@@ -20,7 +20,7 @@ import { describe, expect, it } from "@jest/globals";
 import SurrogateAwareString from "./surrogate-aware-string";
 
 describe("class SurrogateAwareString", () => {
-  describe("property length", () => {
+  describe("get length()", () => {
     it("counts a empty string as 0 length", () => {
       expect.assertions(1);
 
