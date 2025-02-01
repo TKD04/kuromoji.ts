@@ -77,120 +77,136 @@ describe("class SurrogateAwareString", () => {
       expect.assertions(1);
 
       const letter = "a";
+      const surrogateAwareString = new SurrogateAwareString(letter);
 
-      const actual = new SurrogateAwareString(letter);
+      const actual = surrogateAwareString.charAt();
 
-      expect(actual.charAt()).toBe("a");
+      expect(actual).toBe("a");
     });
 
     it("returns a surrogate pair, not the high surrogate code point when the pos is undefined", () => {
       expect.assertions(1);
 
       const surrogatePair = "𠮷";
+      const surrogateAwareString = new SurrogateAwareString(surrogatePair);
 
-      const actual = new SurrogateAwareString(surrogatePair);
+      const actual = surrogateAwareString.charAt();
 
-      expect(actual.charAt()).toBe("𠮷");
+      expect(actual).toBe("𠮷");
     });
 
     it("returns a letter when the pos is 0", () => {
       expect.assertions(1);
 
       const letter = "a";
+      const surrogateAwareString = new SurrogateAwareString(letter);
 
-      const actual = new SurrogateAwareString(letter);
+      const actual = surrogateAwareString.charAt(0);
 
-      expect(actual.charAt(0)).toBe("a");
+      expect(actual).toBe("a");
     });
 
     it("returns a surrogate pair, not the high surrogate code point when the pos is 0", () => {
       expect.assertions(1);
 
       const surrogatePair = "𠮷";
+      const surrogateAwareString = new SurrogateAwareString(surrogatePair);
 
-      const actual = new SurrogateAwareString(surrogatePair);
+      const actual = surrogateAwareString.charAt(0);
 
-      expect(actual.charAt(0)).toBe("𠮷");
+      expect(actual).toBe("𠮷");
     });
 
     it("returns a empty string when the pos is equal to the length", () => {
       expect.assertions(1);
 
       const letter = "a";
+      const surrogateAwareString = new SurrogateAwareString(letter);
 
-      const actual = new SurrogateAwareString(letter);
+      const actual = surrogateAwareString.charAt(1);
 
-      expect(actual.charAt(1)).toBe("");
+      expect(actual).toBe("");
     });
 
     it("returns a empty string when the pos is equal to the length and a string containing a surrogate pair", () => {
       expect.assertions(1);
 
       const surrogatePair = "𠮷";
+      const surrogateAwareString = new SurrogateAwareString(surrogatePair);
 
-      const actual = new SurrogateAwareString(surrogatePair);
+      const actual = surrogateAwareString.charAt(1);
 
-      expect(actual.charAt(1)).toBe("");
+      expect(actual).toBe("");
     });
 
     it("returns a empty string when the pos is greater than the length", () => {
       expect.assertions(1);
 
       const letter = "a";
+      const surrogateAwareString = new SurrogateAwareString(letter);
 
-      const actual = new SurrogateAwareString(letter);
+      const actual = surrogateAwareString.charAt(2);
 
-      expect(actual.charAt(2)).toBe("");
+      expect(actual).toBe("");
     });
 
     it("returns a empty string when the pos is greater than the length and a string contains a surrogate pair", () => {
       expect.assertions(1);
 
       const surrogatePair = "𠮷";
+      const surrogateAwareString = new SurrogateAwareString(surrogatePair);
 
-      const actual = new SurrogateAwareString(surrogatePair);
+      const actual = surrogateAwareString.charAt(2);
 
-      expect(actual.charAt(2)).toBe("");
+      expect(actual).toBe("");
     });
 
     it("returns a empty string when the pos is a negative integer", () => {
       expect.assertions(1);
 
       const letter = "a";
+      const surrogateAwareString = new SurrogateAwareString(letter);
 
-      const actual = new SurrogateAwareString(letter);
+      const actual = surrogateAwareString.charAt(-1);
 
-      expect(actual.charAt(-1)).toBe("");
+      expect(actual).toBe("");
     });
 
     it("returns a empty string when the pos is a negative integer and a string contains a surrogate pair", () => {
       expect.assertions(1);
 
       const surrogatePair = "𠮷";
+      const surrogateAwareString = new SurrogateAwareString(surrogatePair);
 
-      const actual = new SurrogateAwareString(surrogatePair);
+      const actual = surrogateAwareString.charAt(-1);
 
-      expect(actual.charAt(-1)).toBe("");
+      expect(actual).toBe("");
     });
 
     it("returns a letter after a surrogate pair, not the low surrogate code point", () => {
       expect.assertions(1);
 
       const surrogatePairString = "𠮷野屋";
+      const surrogateAwareString = new SurrogateAwareString(
+        surrogatePairString
+      );
 
-      const actual = new SurrogateAwareString(surrogatePairString);
+      const actual = surrogateAwareString.charAt(1);
 
-      expect(actual.charAt(1)).toBe("野");
+      expect(actual).toBe("野");
     });
 
     it("returns a surrogate pair after a surrogate pair, not the low surrogate code point", () => {
       expect.assertions(1);
 
       const surrogatePairString = "𠮷✨";
+      const surrogateAwareString = new SurrogateAwareString(
+        surrogatePairString
+      );
 
-      const actual = new SurrogateAwareString(surrogatePairString);
+      const actual = surrogateAwareString.charAt(1);
 
-      expect(actual.charAt(1)).toBe("✨");
+      expect(actual).toBe("✨");
     });
   });
 
@@ -199,80 +215,88 @@ describe("class SurrogateAwareString", () => {
       expect.assertions(1);
 
       const letter = "a";
+      const surrogateAwareString = new SurrogateAwareString(letter);
 
-      const actual = new SurrogateAwareString(letter);
+      const actual = surrogateAwareString.codePointAt(0);
 
-      expect(actual.codePointAt(0)).toBe(0x61);
+      expect(actual).toBe(0x61);
     });
 
     it("returns the code point of a surrogate pair, not the high surrogate code point", () => {
       expect.assertions(1);
 
       const surrogatePair = "𠮷";
+      const surrogateAwareString = new SurrogateAwareString(surrogatePair);
 
-      const actual = new SurrogateAwareString(surrogatePair);
+      const actual = surrogateAwareString.codePointAt(0);
 
-      expect(actual.codePointAt(0)).toBe(0x2_0b_b7);
+      expect(actual).toBe(0x2_0b_b7);
     });
 
     it("return NaN when the pos is equal to the length", () => {
       expect.assertions(1);
 
       const letter = "a";
+      const surrogateAwareString = new SurrogateAwareString(letter);
 
-      const actual = new SurrogateAwareString(letter);
+      const actual = surrogateAwareString.codePointAt(1);
 
-      expect(actual.codePointAt(1)).toBeNaN();
+      expect(actual).toBeNaN();
     });
 
     it("return NaN when the pos is equal to the length and a string contains a surrogate pair", () => {
       expect.assertions(1);
 
       const surrogatePair = "𠮷";
+      const surrogateAwareString = new SurrogateAwareString(surrogatePair);
 
-      const actual = new SurrogateAwareString(surrogatePair);
+      const actual = surrogateAwareString.codePointAt(1);
 
-      expect(actual.codePointAt(1)).toBeNaN();
+      expect(actual).toBeNaN();
     });
 
     it("return NaN when the pos is greater than the length", () => {
       expect.assertions(1);
 
       const letter = "𠮷";
+      const surrogateAwareString = new SurrogateAwareString(letter);
 
-      const actual = new SurrogateAwareString(letter);
+      const actual = surrogateAwareString.codePointAt(2);
 
-      expect(actual.codePointAt(2)).toBeNaN();
+      expect(actual).toBeNaN();
     });
 
     it("return NaN when the pos is greater than the length and a string contains a surrogate pair", () => {
       expect.assertions(1);
 
       const surrogatePair = "𠮷";
+      const surrogateAwareString = new SurrogateAwareString(surrogatePair);
 
-      const actual = new SurrogateAwareString(surrogatePair);
+      const actual = surrogateAwareString.codePointAt(2);
 
-      expect(actual.codePointAt(2)).toBeNaN();
+      expect(actual).toBeNaN();
     });
 
     it("return NaN when the pos is a negative integer", () => {
       expect.assertions(1);
 
       const letter = "a";
+      const surrogateAwareString = new SurrogateAwareString(letter);
 
-      const actual = new SurrogateAwareString(letter);
+      const actual = surrogateAwareString.codePointAt(-1);
 
-      expect(actual.codePointAt(-1)).toBeNaN();
+      expect(actual).toBeNaN();
     });
 
     it("return NaN when the pos is a negative integer and a string contains a surrogate pair", () => {
       expect.assertions(1);
 
       const surrogatePair = "𠮷";
+      const surrogateAwareString = new SurrogateAwareString(surrogatePair);
 
-      const actual = new SurrogateAwareString(surrogatePair);
+      const actual = surrogateAwareString.codePointAt(-1);
 
-      expect(actual.codePointAt(-1)).toBeNaN();
+      expect(actual).toBeNaN();
     });
   });
 
@@ -281,168 +305,204 @@ describe("class SurrogateAwareString", () => {
       expect.assertions(1);
 
       const normalString = "abc";
-
-      const actual = new SurrogateAwareString(normalString);
+      const surrogateAwareString = new SurrogateAwareString(normalString);
 
       // eslint-disable-next-line unicorn/prefer-spread
-      expect(actual.slice()).toBe("abc");
+      const actual = surrogateAwareString.slice();
+
+      expect(actual).toBe("abc");
     });
 
     it("does not cut a string when the start is undefind and a string contains a surrogate pair", () => {
       expect.assertions(1);
 
       const surrogatePairString = "𠮷野屋";
-
-      const actual = new SurrogateAwareString(surrogatePairString);
+      const surrogateAwareString = new SurrogateAwareString(
+        surrogatePairString
+      );
 
       // eslint-disable-next-line unicorn/prefer-spread
-      expect(actual.slice()).toBe("𠮷野屋");
+      const actual = surrogateAwareString.slice();
+
+      expect(actual).toBe("𠮷野屋");
     });
 
     it("does not cut a string when the start is 0", () => {
       expect.assertions(1);
 
       const normalString = "abc";
-
-      const actual = new SurrogateAwareString(normalString);
+      const surrogateAwareString = new SurrogateAwareString(normalString);
 
       // eslint-disable-next-line unicorn/prefer-spread
-      expect(actual.slice(0)).toBe("abc");
+      const actual = surrogateAwareString.slice(0);
+
+      expect(actual).toBe("abc");
     });
 
     it("does not cut a string when the start is 0 and a string contains a surrogate pair", () => {
       expect.assertions(1);
 
       const surrogatePairString = "𠮷野屋";
-
-      const actual = new SurrogateAwareString(surrogatePairString);
+      const surrogateAwareString = new SurrogateAwareString(
+        surrogatePairString
+      );
 
       // eslint-disable-next-line unicorn/prefer-spread
-      expect(actual.slice(0)).toBe("𠮷野屋");
+      const actual = surrogateAwareString.slice(0);
+
+      expect(actual).toBe("𠮷野屋");
     });
 
     it("cuts a string when the start is positive integer", () => {
       expect.assertions(2);
 
       const normalString = "abc";
+      const surrogateAwareString = new SurrogateAwareString(normalString);
 
-      const actual = new SurrogateAwareString(normalString);
+      const actual1 = surrogateAwareString.slice(1);
+      const actual2 = surrogateAwareString.slice(2);
 
-      expect(actual.slice(1)).toBe("bc");
-      expect(actual.slice(2)).toBe("c");
+      expect(actual1).toBe("bc");
+      expect(actual2).toBe("c");
     });
 
     it("slices a string containing a surrogate pair when the start is positive integer", () => {
       expect.assertions(2);
 
       const surrogatePairString = "𠮷野屋";
+      const surrogateAwareString = new SurrogateAwareString(
+        surrogatePairString
+      );
 
-      const actual = new SurrogateAwareString(surrogatePairString);
+      const actual1 = surrogateAwareString.slice(1);
+      const actual2 = surrogateAwareString.slice(2);
 
-      expect(actual.slice(1)).toBe("野屋");
-      expect(actual.slice(2)).toBe("屋");
+      expect(actual1).toBe("野屋");
+      expect(actual2).toBe("屋");
     });
 
     it("returns a empty string when the start is equal to the length", () => {
       expect.assertions(1);
 
       const normalString = "abc";
+      const surrogateAwareString = new SurrogateAwareString(normalString);
 
-      const actual = new SurrogateAwareString(normalString);
+      const actual = surrogateAwareString.slice(3);
 
-      expect(actual.slice(3)).toBe("");
+      expect(actual).toBe("");
     });
 
     it("returns a empty string when the start is equal to the length and a string contains a surrogate pair", () => {
       expect.assertions(1);
 
       const surrogatePairString = "𠮷野屋";
+      const surrogateAwareString = new SurrogateAwareString(
+        surrogatePairString
+      );
 
-      const actual = new SurrogateAwareString(surrogatePairString);
+      const actual = surrogateAwareString.slice(3);
 
-      expect(actual.slice(3)).toBe("");
+      expect(actual).toBe("");
     });
 
     it("returns a empty string when the start is greater than the length", () => {
       expect.assertions(1);
 
       const normalString = "abc";
+      const surrogateAwareString = new SurrogateAwareString(normalString);
 
-      const actual = new SurrogateAwareString(normalString);
+      const actual = surrogateAwareString.slice(4);
 
-      expect(actual.slice(4)).toBe("");
+      expect(actual).toBe("");
     });
 
     it("returns a empty string when the start is greater than the length and a string contains a surrogate pair", () => {
       expect.assertions(1);
 
       const surrogatePairString = "𠮷野屋";
+      const surrogateAwareString = new SurrogateAwareString(
+        surrogatePairString
+      );
 
-      const actual = new SurrogateAwareString(surrogatePairString);
+      const actual = surrogateAwareString.slice(4);
 
-      expect(actual.slice(4)).toBe("");
+      expect(actual).toBe("");
     });
 
     it("cuts a string when the start is negative integer", () => {
       expect.assertions(2);
 
       const normalString = "abc";
+      const surrogateAwareString = new SurrogateAwareString(normalString);
 
-      const actual = new SurrogateAwareString(normalString);
+      const actual1 = surrogateAwareString.slice(-1);
+      const actual2 = surrogateAwareString.slice(-2);
 
-      expect(actual.slice(-1)).toBe("c");
-      expect(actual.slice(-2)).toBe("bc");
+      expect(actual1).toBe("c");
+      expect(actual2).toBe("bc");
     });
 
     it("cuts a string containing a surrogate pair when the start is negative integer", () => {
       expect.assertions(2);
 
       const surrogatePairString = "𠮷野屋";
+      const surrogateAwareString = new SurrogateAwareString(
+        surrogatePairString
+      );
 
-      const actual = new SurrogateAwareString(surrogatePairString);
+      const actual1 = surrogateAwareString.slice(-1);
+      const actual2 = surrogateAwareString.slice(-2);
 
-      expect(actual.slice(-1)).toBe("屋");
-      expect(actual.slice(-2)).toBe("野屋");
+      expect(actual1).toBe("屋");
+      expect(actual2).toBe("野屋");
     });
 
     it("does not cut a string when the start is equal to the negative length", () => {
       expect.assertions(1);
 
       const normalString = "abc";
+      const surrogateAwareString = new SurrogateAwareString(normalString);
 
-      const actual = new SurrogateAwareString(normalString);
+      const actual = surrogateAwareString.slice(-3);
 
-      expect(actual.slice(-3)).toBe("abc");
+      expect(actual).toBe("abc");
     });
 
     it("does not cut a string containing a surrogate pair when the start is equal to the negative length", () => {
       expect.assertions(1);
 
       const surrogatePairString = "𠮷野屋";
+      const surrogateAwareString = new SurrogateAwareString(
+        surrogatePairString
+      );
 
-      const actual = new SurrogateAwareString(surrogatePairString);
+      const actual = surrogateAwareString.slice(-3);
 
-      expect(actual.slice(-3)).toBe("𠮷野屋");
+      expect(actual).toBe("𠮷野屋");
     });
 
     it("does not cut a string when the start is less than the negative length", () => {
       expect.assertions(1);
 
       const normalString = "abc";
+      const surrogateAwareString = new SurrogateAwareString(normalString);
 
-      const actual = new SurrogateAwareString(normalString);
+      const actual = surrogateAwareString.slice(-4);
 
-      expect(actual.slice(-4)).toBe("abc");
+      expect(actual).toBe("abc");
     });
 
     it("does not cut a string containing a surrogate pair when the start is less than the negative length", () => {
       expect.assertions(1);
 
       const surrogatePairString = "𠮷野屋";
+      const surrogateAwareString = new SurrogateAwareString(
+        surrogatePairString
+      );
 
-      const actual = new SurrogateAwareString(surrogatePairString);
+      const actual = surrogateAwareString.slice(-4);
 
-      expect(actual.slice(-4)).toBe("𠮷野屋");
+      expect(actual).toBe("𠮷野屋");
     });
   });
 
@@ -451,20 +511,24 @@ describe("class SurrogateAwareString", () => {
       expect.assertions(1);
 
       const normalString = "abc";
+      const surrogateAwareString = new SurrogateAwareString(normalString);
 
-      const actual = new SurrogateAwareString(normalString);
+      const actual = surrogateAwareString.toString();
 
-      expect(actual.toString()).toBe("abc");
+      expect(actual).toBe("abc");
     });
 
     it("returns a string containing a pair of surrogates as it is", () => {
       expect.assertions(1);
 
       const surrogatePairString = "𠮷野屋";
+      const surrogateAwareString = new SurrogateAwareString(
+        surrogatePairString
+      );
 
-      const actual = new SurrogateAwareString(surrogatePairString);
+      const actual = surrogateAwareString.toString();
 
-      expect(actual.toString()).toBe("𠮷野屋");
+      expect(actual).toBe("𠮷野屋");
     });
   });
 });
