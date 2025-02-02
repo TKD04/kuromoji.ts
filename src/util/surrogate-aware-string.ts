@@ -16,7 +16,7 @@
  */
 
 import combineSurrogatePair from "./combine-surrogate-pair";
-import isSurrogatePair from "./is-surrogate-pair";
+import isHighSurrogate from "./is-high-surrogate";
 
 /**
  * Represents a wrapper class of the String object to support a surrogate pair.
@@ -78,7 +78,7 @@ export default class SurrogateAwareString {
       throw new Error("codePoint is undefined");
     }
 
-    if (isSurrogatePair(codePoint)) {
+    if (isHighSurrogate(codePoint)) {
       const lowSurrogateCodePoint = this.#SPREADED_STRING
         .at(pos + 1)
         ?.codePointAt(0);

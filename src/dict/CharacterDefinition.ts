@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import isSurrogatePair from "../util/is-surrogate-pair";
+import isHighSurrogate from "../util/is-high-surrogate";
 import CharacterClass from "./character-class";
 import InvokeDefinitionMap from "./invoke-definition-map";
 
@@ -220,7 +220,7 @@ export default class {
     let class_id;
 
     const code = ch.charCodeAt(0);
-    if (isSurrogatePair(ch)) {
+    if (isHighSurrogate(ch)) {
       // Surrogate pair character codes can not be defined by char.def, so set DEFAULT category
       class_id = this.invoke_definition_map.lookup(DEFAULT_CATEGORY);
     } else if (code < this.character_category_map.length) {

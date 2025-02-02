@@ -1,5 +1,5 @@
+import isHighSurrogate from "./is-high-surrogate";
 import isLowSurrogates from "./is-low-surrogates";
-import isSurrogatePair from "./is-surrogate-pair";
 
 /**
  * Convert String (UTF-16) to UTF-8 ArrayBuffer
@@ -18,7 +18,7 @@ export default (str: string): Uint8Array => {
     let unicodeCode: number;
 
     i += 1;
-    if (isSurrogatePair(utf16Code)) {
+    if (isHighSurrogate(utf16Code)) {
       const highSurrogates = utf16Code;
       const lowSurrogates = str.charCodeAt(i);
 
